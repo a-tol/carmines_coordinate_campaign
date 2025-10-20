@@ -39,9 +39,16 @@
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
-    box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; 
   }
 
   h1 {
@@ -104,6 +111,14 @@
     align-items: start;
     flex-wrap: wrap;
     gap: 1.25rem;
+  }
+
+  .html{
+    min-height: 100%;
+  }
+
+  .body{
+    min-height: 100%;
   }
 
   .pill {
@@ -179,9 +194,18 @@
   .sidenav-button{
     width : 100%
   }
+
+  .mat-sidenav-container {
+    position: fixed;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    min-width: 100%;
+  }
+
 </style>
 
-<div class="min-h-screen min-w-screen">
+<div class="min-h-min min-w-min">
   <mat-toolbar>
     <button class="mat-button" mat-raised-button (click)="sidenav.toggle()">Menu</button>
     <span>Campaign Name HERE</span>
@@ -198,13 +222,15 @@
       <mat-divider/>
       <button class="sidenav-button" mat-button (click)="swap_mode(4)">Map</button>
       <mat-divider/>
-      <button class="sidenav-button" mat-button>Change<br/>Campaign</button>
+      <button class="sidenav-button" mat-button>Change Campaign</button>
       <mat-divider/>
     </mat-sidenav>
     <mat-sidenav-content>
-      <img src = "./assets/screenshot.png"/>
-      <app-ui-core [set_mode] = "mode()">
-      </app-ui-core>
+      <div class="min-h-screen">
+        <img src = "./assets/screenshot.png"/>
+        <app-ui-core [set_mode] = "mode()">
+        </app-ui-core>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
