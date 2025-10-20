@@ -1,1 +1,50 @@
-<p>chara works!</p>
+<style>
+    .divider {
+        width: 1px;
+        background: var(--red-to-pink-to-purple-vertical-gradient);
+        margin-inline: 0.5rem;
+    }
+
+    .mat-sidenav-container {
+        position: fixed;
+        height: 100%;
+        min-height: 100%;
+        width: 100%;
+        min-width: 100%;
+    }
+    .list-item{
+
+    }
+    .list-item:hover{
+        background-color:beige;
+    }
+    .highlighted{
+        background-color: aquamarine;
+    }
+    .chara_card{
+        max-width: 300px;
+        max-height: 400px;
+    }
+</style>
+
+<mat-sidenav-container>
+    <mat-sidenav opened [disableClose]="true" mode="side">
+        @for (group of group_data(); track group) {
+            <div class="list-item" (click) = "selected_group.set(group)">
+                <mat-divider/>
+                {{group}}
+            </div>
+        }
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="grid auto-rows-auto auto-cols-auto grid-flow-cols justify-content">
+        @for (chara of selected_chara_list(); track chara.key){
+            <mat-card class="chara_card">
+                <mat-card-header>clueless</mat-card-header>
+                <img mat-card-md-image src="/Clueless.webp"/>
+                <mat-card-footer>bottom text</mat-card-footer>
+            </mat-card>
+        }
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

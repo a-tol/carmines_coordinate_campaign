@@ -1,10 +1,15 @@
 import { Component, signal, input, output } from '@angular/core';
 import { Mode } from "../../shared/interfaces/mode"
+import { CharaComponent } from './chara/chara.component';
+import { ItemComponent } from './item/item.component';
+import { LogComponent } from './log/log.component';
+import { MapComponent } from './map/map.component';
+import { HomeComponent } from './home/home.component';
 
 @Component({
   selector: 'app-ui-core',
   standalone: true,
-  imports: [],
+  imports: [HomeComponent, CharaComponent, ItemComponent, LogComponent, MapComponent],
   templateUrl: './ui-core.component.html',
   styleUrl: './ui-core.component.css'
 })

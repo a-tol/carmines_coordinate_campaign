@@ -1,6 +1,6 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal, output, ElementRef, viewChild} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'
 import { MatCardModule } from "@angular/material/card"
 import { MatToolbarModule } from "@angular/material/toolbar"
 import { MatButtonModule } from "@angular/material/button"
@@ -8,7 +8,7 @@ import { MatDividerModule } from "@angular/material/divider"
 import { UiCoreComponent } from './Component/ui-core/ui-core.component';
 import { Mode } from "./shared/interfaces/mode"
 import { mode_default } from './shared/defaults/mode-defaults';
-
+import { DOCUMENT } from "@angular/common"
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,11 @@ import { mode_default } from './shared/defaults/mode-defaults';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
+
+  sidenav = viewChild(MatSidenav)
+
   title = 'DND_campaign_front';
   mode = signal<Mode>(mode_default);
 
@@ -26,6 +30,7 @@ export class AppComponent {
   }
 
   swap_mode(mode : number){
+    this.sidenav()?.toggle()
     switch(mode){
       case 0:
         this.mode.set({mode : "home"});

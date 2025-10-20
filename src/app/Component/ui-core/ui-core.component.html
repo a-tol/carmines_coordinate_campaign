@@ -1,7 +1,29 @@
 
 @if (set_mode()) {
-    <p>mode: {{set_mode().mode}} (-_-)</p>
-
-} @else {
+    @switch(set_mode().mode){
+        @case("home"){
+            <app-home/>
+        }
+        @case("chara"){
+            <app-chara/>
+        }
+        @case("item"){
+            <app-item/>
+        }
+        @case("log"){
+            <app-log/>
+        }
+        @case("map"){
+            <app-map/>
+        }
+        @default{
+            <p>at default</p>
+            <app-home/>
+        }
+    }
+}
+@else {
     <p>no mode /-(._.)-\</p>
 }
+<p>The End</p>
+
