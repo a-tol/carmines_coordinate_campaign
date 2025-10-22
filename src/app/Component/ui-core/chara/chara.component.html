@@ -22,8 +22,12 @@
         background-color: aquamarine;
     }
     .chara_card{
-        max-width: 300px;
         max-height: 400px;
+        min-width: 200px;
+        max-width: 200px
+    }
+    .textarea{
+        resize:none
     }
 </style>
 
@@ -35,16 +39,28 @@
                 {{group}}
             </div>
         }
+        <mat-divider></mat-divider>
+        <textarea #group_name_entry class="w-4/5 h-5 text-blue">Create a new group</textarea>
+        <button type="" class="sidenav-button" (click)="create_group()" mat-button>*</button>
+        <mat-divider></mat-divider>
     </mat-sidenav>
     <mat-sidenav-content>
-        <div class="grid auto-rows-auto auto-cols-auto grid-flow-cols justify-content">
+        <div class="flex flex-wrap gap-4 justify-content">
         @for (chara of selected_chara_list(); track chara.key){
             <mat-card class="chara_card">
-                <mat-card-header>clueless</mat-card-header>
-                <img mat-card-md-image src="/Clueless.webp"/>
-                <mat-card-footer>bottom text</mat-card-footer>
+                <mat-card-header>
+                    <mat-card-title-group>
+                        <mat-card-title>{{chara.name}}</mat-card-title>
+                        <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
+                    </mat-card-title-group>
+                </mat-card-header>
+                <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
+                <mat-card-content>
+                    {{chara.subtitle}}
+                </mat-card-content>
             </mat-card>
         }
         </div>
+    
     </mat-sidenav-content>
 </mat-sidenav-container>
