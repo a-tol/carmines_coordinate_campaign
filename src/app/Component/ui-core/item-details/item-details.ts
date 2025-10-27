@@ -8,6 +8,5 @@ import { Component, input} from '@angular/core';
 })
 export class ItemDetailsComponent {
 
-  key = input.required<string>();
 
 }

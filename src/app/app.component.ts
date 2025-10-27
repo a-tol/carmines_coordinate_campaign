@@ -6,7 +6,7 @@ import { MatToolbarModule } from "@angular/material/toolbar"
 import { MatButtonModule } from "@angular/material/button"
 import { MatDividerModule } from "@angular/material/divider"
 import { UiCoreComponent } from './Component/ui-core/ui-core.component';
-import { Mode, ModeWithDataKey } from "./shared/interfaces/mode"
+import { Mode } from "./shared/interfaces/mode"
 import { mode_default } from './shared/defaults/mode-defaults';
 import { DOCUMENT } from "@angular/common"
 
@@ -24,7 +24,6 @@ export class AppComponent {
 
   title = 'DND_campaign_front';
   mode = signal<Mode>(mode_default);
-  key = signal<string>("null");
 
   ngOnInit(){
 
@@ -51,15 +50,6 @@ export class AppComponent {
       default:
         break;
     }
-  }
-
-  swap_mode_submode(mode : Mode){
-    this.mode.set(mode);
-  }
-
-  swap_mode_with_key(mode_with_key : ModeWithDataKey){
-    this.key.set(mode_with_key.key)
-    this.mode.set({mode : mode_with_key.mode})
   }
   
 }

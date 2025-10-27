@@ -5,8 +5,7 @@
             <app-home/>
         }
         @case("chara"){
-            <app-chara
-            (load_chara_data) = "load_chara_data($event)"/>
+            <app-chara/>
         }
         @case("item"){
             <app-item/>
@@ -16,15 +15,6 @@
         }
         @case("map"){
             <app-map/>
-        }
-        @case("chara_data"){
-            <app-chara-details
-            [key] = "key()"
-            (return) = "return_to_mode($event)"/>
-        }
-        @case("item_data"){
-            <app-item-details
-            [key] = "key()"/>
         }
         @default{
             <p>at default</p>

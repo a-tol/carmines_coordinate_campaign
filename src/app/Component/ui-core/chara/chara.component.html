@@ -38,7 +38,7 @@
 <mat-sidenav-container>
     <mat-sidenav opened [disableClose]="true" mode="side">
         @for (group of group_data(); track group) {
-            <div class="grid grid-cols-4 grid-rows-1" (click) = "selected_group.set(group)">
+            <div class="grid grid-cols-4 grid-rows-1" (click) = "change_selected_group(group)">
                 <div class="col-span-3 col-start-1">{{group}}</div>
                 <button type="" class="col-span-1 col-start-4" (click)="remove_group(group)" mat-button>X</button>
             </div>
@@ -49,27 +49,34 @@
         <mat-divider></mat-divider>
     </mat-sidenav>
     <mat-sidenav-content>
-        <div class="flex flex-wrap gap-4 justify-content">
-        @for (chara of selected_chara_list(); track chara.key){
-            <mat-card class="chara_card">
-                <mat-card-header>
-                    <mat-card-title-group>
-                        <mat-card-title>
-                        <div class="grid grid-cols-4 grid-rows-1">
-                            <div class="col-span-3 col-start-1">{{chara.name}}</div>
-                            <button type="" class="col-span-1 col-start-4 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
-                        </div>
-                        </mat-card-title>
-                        <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
-                    </mat-card-title-group>
-                </mat-card-header>
-                <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
-                <mat-card-content>
-                    {{chara.subtitle}}
-                </mat-card-content>
-            </mat-card>
+        @if(!inspecting_character){
+            <div class="flex flex-wrap gap-4 justify-content">
+            @for (chara of selected_chara_list(); track chara.key){
+                <mat-card class="chara_card">
+                    <mat-card-header>
+                        <mat-card-title-group>
+                            <mat-card-title>
+                            <div class="grid grid-cols-4 grid-rows-1">
+                                <div class="col-span-3 col-start-1">{{chara.name}}</div>
+                                <button type="" class="col-span-1 col-start-4 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
+                            </div>
+                            </mat-card-title>
+                            <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
+                        </mat-card-title-group>
+                    </mat-card-header>
+                    <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
+                    <mat-card-content>
+                        {{chara.subtitle}}
+                    </mat-card-content>
+                </mat-card>
+            }
+            </div>
         }
-        </div>
+        @else {
+            <app-chara-details
+                [chara_key] = "selected_chara_key"
+                (return) = "return_to_chara_list()"/>
+        }
     
     </mat-sidenav-content>
 </mat-sidenav-container>

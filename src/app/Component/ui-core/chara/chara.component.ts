@@ -6,11 +6,12 @@ import { chara_data_list_default, group_data_list_default } from '../../../share
 import { MatCardModule } from '@angular/material/card'
 import { MatButtonModule } from '@angular/material/button';
 import { ElementRef } from '@angular/core';
+import { CharaDetailsComponent } from './chara-details/chara-details';
 
 @Component({
   selector: 'app-chara',
   standalone: true,
-  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule],
+  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule, CharaDetailsComponent],
   templateUrl: './chara.component.html',
   styleUrl: './chara.component.css'
 })
@@ -27,6 +28,9 @@ export class CharaComponent {
 
   public load_chara_data = output<string>();
 
+  inspecting_character = false;
+  selected_chara_key = "";
+
   @ViewChild('group_name_entry')
   group_name_input!: ElementRef;
 
@@ -40,7 +44,17 @@ export class CharaComponent {
   }
 
   open_details(chara_key : string){
-    this.load_chara_data.emit(chara_key)
+    this.inspecting_character = true;
+    this.selected_chara_key = chara_key;
+  }
+
+  return_to_chara_list(){
+    this.inspecting_character = false;
+  }
+
+  change_selected_group(to_group : string){
+    this.selected_group.set(to_group);
+    this.inspecting_character = false;
   }
 
 }
