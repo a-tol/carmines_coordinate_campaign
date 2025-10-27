@@ -175,7 +175,10 @@
     </mat-sidenav>
     <mat-sidenav-content>
       <div class="min-h-screen">
-        <app-ui-core [set_mode] = "mode()">
+        <app-ui-core  [set_mode] = "mode()"
+                      [key] = "key()"
+                      (load_data_handler) = "swap_mode_with_key($event)"
+                      (return) = swap_mode_submode($event)>
         </app-ui-core>
       </div>
     </mat-sidenav-content>

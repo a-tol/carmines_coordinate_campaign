@@ -12,10 +12,10 @@
         width: 100%;
         min-width: 100%;
     }
-    .list-item{
+    .grid{
 
     }
-    .list-item:hover{
+    .grid:hover{
         background-color:beige;
     }
     .highlighted{
@@ -29,17 +29,21 @@
     .textarea{
         resize:none
     }
+    .mat-raised-button{
+        width: auto;
+        height: auto
+    }
 </style>
 
 <mat-sidenav-container>
     <mat-sidenav opened [disableClose]="true" mode="side">
         @for (group of group_data(); track group) {
-            <div class="list-item" (click) = "selected_group.set(group)">
-                <mat-divider/>
-                {{group}}
+            <div class="grid grid-cols-4 grid-rows-1" (click) = "selected_group.set(group)">
+                <div class="col-span-3 col-start-1">{{group}}</div>
+                <button type="" class="col-span-1 col-start-4" (click)="remove_group(group)" mat-button>X</button>
             </div>
+            <mat-divider/>
         }
-        <mat-divider></mat-divider>
         <textarea #group_name_entry class="w-4/5 h-5 text-blue">Create a new group</textarea>
         <button type="" class="sidenav-button" (click)="create_group()" mat-button>*</button>
         <mat-divider></mat-divider>
@@ -50,7 +54,12 @@
             <mat-card class="chara_card">
                 <mat-card-header>
                     <mat-card-title-group>
-                        <mat-card-title>{{chara.name}}</mat-card-title>
+                        <mat-card-title>
+                        <div class="grid grid-cols-4 grid-rows-1">
+                            <div class="col-span-3 col-start-1">{{chara.name}}</div>
+                            <button type="" class="col-span-1 col-start-4 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
+                        </div>
+                        </mat-card-title>
                         <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
                     </mat-card-title-group>
                 </mat-card-header>

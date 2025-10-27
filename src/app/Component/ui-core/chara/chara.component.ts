@@ -1,4 +1,4 @@
-import { Component, signal, computed, ViewChild } from '@angular/core';
+import { Component, signal, computed, ViewChild, output} from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CharaData } from '../../../shared/interfaces/chara-data';
@@ -25,11 +25,22 @@ export class CharaComponent {
   public selected_group = signal<string>((this.group_data().length == 0 ? "default" : this.group_data()[0]));
   public selected_chara_list = computed<CharaData[]>(() => this.chara_data_list().filter((val, ind, arr) => this.selected_group() === val.group))
 
+  public load_chara_data = output<string>();
+
   @ViewChild('group_name_entry')
   group_name_input!: ElementRef;
 
+  //connect to database later
   create_group(){
     this.group_data.update((list) => ([...list, this.group_name_input.nativeElement.value]))
+  }
+
+  remove_group(group_name : string){
+    this.group_data.update((list) => (list.filter((val, ind, arr) => val != group_name)))
+  }
+
+  open_details(chara_key : string){
+    this.load_chara_data.emit(chara_key)
   }
 
 }

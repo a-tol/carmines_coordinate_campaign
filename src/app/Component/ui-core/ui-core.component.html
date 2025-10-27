@@ -5,7 +5,8 @@
             <app-home/>
         }
         @case("chara"){
-            <app-chara/>
+            <app-chara
+            (load_chara_data) = "load_chara_data($event)"/>
         }
         @case("item"){
             <app-item/>
@@ -16,6 +17,15 @@
         @case("map"){
             <app-map/>
         }
+        @case("chara_data"){
+            <app-chara-details
+            [key] = "key()"
+            (return) = "return_to_mode($event)"/>
+        }
+        @case("item_data"){
+            <app-item-details
+            [key] = "key()"/>
+        }
         @default{
             <p>at default</p>
             <app-home/>
@@ -25,5 +35,4 @@
 @else {
     <p>no mode /-(._.)-\</p>
 }
-<p>The End</p>
 
