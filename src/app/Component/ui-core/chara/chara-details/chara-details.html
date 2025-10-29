@@ -1,9 +1,35 @@
-<div class="grid grid-cols-4 grid-rows-5">
-    <div class="row-span-2 col-span-2 row-start-1 col-start-3">
-        <img class="justify-self-end" src="/Clueless.webp">
+<form>
+    <div class="grid grid-cols-4 grid-rows-auto">
+        @if(edit_mode()){
+            <div class="min-w-50% min-h-[360px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
+                <img class="mx-auto object-center justify-self-centerobject-contain max-w-fill max-h-fill" src="/mao_zedong.png">
+            </div>
+            <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
+                @if(chara_data_set()?.name != undefined){
+                    <input class="bg-gray-300 text-4xl text-center" value="{{chara_data_set()?.name}}">
+                }
+                @else{
+                    <input class="bg-gray-300 text-4xl text-center" value="Enter a new name">
+                }
+            </div>
+                <div class="row-span-1 col-span-2 row-start-2 col-start-1 p-3">
+                @if(chara_data_set()?.name != undefined){
+                    <input class="bg-gray-300 text-4xl text-center" value="{{chara_data_set()?.name}}">
+                }
+                @else{
+                    <input class="bg-gray-300 text-4xl text-center" value="Enter a new name">
+                }
+            </div>
+        }
+        @else{
+            <div class="min-w-50% min-h-[720px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
+                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="/Clueless.webp">
+            </div>
+            <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
+                <h1 class="text-4xl text-center">{{chara_data_set()?.name}}</h1>
+                <button matButton (click)="this.set_to_edit.emit(true)">Edit</button>
+            </div>
+            <button type="" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" mat-button (click)="return_to_select()">Return To Character Select</button>
+        }
     </div>
-    <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
-        <h1 class="text-4xl text-center">{{chara_data_set()?.name}}</h1>
-    </div>
-    <button type="" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" mat-button (click)="return_to_select()">Return To Character Select</button>
-</div> 
+</form>

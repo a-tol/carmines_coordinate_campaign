@@ -7,11 +7,13 @@ import { MatCardModule } from '@angular/material/card'
 import { MatButtonModule } from '@angular/material/button';
 import { ElementRef } from '@angular/core';
 import { CharaDetailsComponent } from './chara-details/chara-details';
+import { FormGroup, FormsModule } from '@angular/forms'
+import { group_submit_config as gsc} from '../../../shared/defaults/submit_configs';
 
 @Component({
   selector: 'app-chara',
   standalone: true,
-  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule, CharaDetailsComponent],
+  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule, CharaDetailsComponent, FormsModule],
   templateUrl: './chara.component.html',
   styleUrl: './chara.component.css'
 })
@@ -29,14 +31,18 @@ export class CharaComponent {
   public load_chara_data = output<string>();
 
   inspecting_character = false;
+  in_edit_mode = signal<boolean>(false);
   selected_chara_key = "";
+
+  new_group_name = signal<string>("Create a new group...")
+  group_submit_config = gsc
 
   @ViewChild('group_name_entry')
   group_name_input!: ElementRef;
 
   //connect to database later
   create_group(){
-    this.group_data.update((list) => ([...list, this.group_name_input.nativeElement.value]))
+    this.group_data.update((list) => ([...list, this.new_group_name()]))
   }
 
   remove_group(group_name : string){
@@ -46,6 +52,7 @@ export class CharaComponent {
   open_details(chara_key : string){
     this.inspecting_character = true;
     this.selected_chara_key = chara_key;
+    this.in_edit_mode.set(false);
   }
 
   return_to_chara_list(){
@@ -55,6 +62,16 @@ export class CharaComponent {
   change_selected_group(to_group : string){
     this.selected_group.set(to_group);
     this.inspecting_character = false;
+  }
+
+  make_new_character(){
+    this.inspecting_character = true;
+    this.selected_chara_key = "newchara"
+    this.in_edit_mode.set(true);
+  }
+
+  set_group_name(value : any){
+    this.new_group_name.set(value);
   }
 
 }

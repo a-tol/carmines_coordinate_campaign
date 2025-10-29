@@ -14,6 +14,8 @@ export class CharaDetailsComponent {
   
   chara_key = input.required<string>()
   return = output<Mode>();
+  edit_mode = input<boolean>();
+  set_to_edit = output<boolean>();
 
   //todo make this into a database query
   

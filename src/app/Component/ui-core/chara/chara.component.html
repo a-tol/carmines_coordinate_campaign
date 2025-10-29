@@ -44,8 +44,16 @@
             </div>
             <mat-divider/>
         }
-        <textarea #group_name_entry class="w-4/5 h-5 text-blue">Create a new group</textarea>
-        <button type="" class="sidenav-button" (click)="create_group()" mat-button>*</button>
+        <form (ngSubmit)="create_group()">
+            <input  [id]="group_submit_config.id"
+                    [type]="group_submit_config.type" 
+                    [ngModel]="new_group_name()" 
+                    (ngModelChange)="set_group_name($event)" 
+                    name="dum"
+                    #group_name_entry 
+                    class="w-4/5 h-5 text-blue" >
+            <button type="submit" class="sidenav-button" mat-button>*</button>
+        </form>
         <mat-divider></mat-divider>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -70,11 +78,29 @@
                     </mat-card-content>
                 </mat-card>
             }
+            <mat-card class="chara_card">
+                <mat-card-header>
+                    <mat-card-title-group>
+                        <mat-card-title>
+                        <div class="grid grid-cols-4 grid-rows-1">
+                            <div class="col-span-3 col-start-1">New Character</div>
+                            <button type="" class="col-span-1 col-start-4 size-auto" mat-button (click)="make_new_character()">+</button>
+                        </div>
+                        </mat-card-title>
+                        <mat-card-subtitle></mat-card-subtitle>
+                    </mat-card-title-group>
+                </mat-card-header>
+                <mat-card-content>
+                    Make a new character?
+                </mat-card-content>
+            </mat-card>
             </div>
         }
         @else {
             <app-chara-details
                 [chara_key] = "selected_chara_key"
+                [edit_mode] = "in_edit_mode()"
+                (set_to_edit) = "this.in_edit_mode.set(true)"
                 (return) = "return_to_chara_list()"/>
         }
     
