@@ -1,35 +1,85 @@
-<form>
-    <div class="grid grid-cols-4 grid-rows-auto">
+<style>
+    html {
+        height: 100%;
+        margin: auto;
+        width: 960px;
+        overflow : scroll
+    }
+
+    .title_input{
+        display: block;
+        margin: 0 auto
+    }
+    .subtitle_input{
+        display: block;
+        margin: 0 auto
+    }
+    .details_section{
+        max-height : calc(100vh - 64px)
+    }
+</style>
+<form class="details_section">
+    <div class="ml-1 grid grid-cols-4 grid-rows-auto">
+        <!-- Character Edit Mode -->
         @if(edit_mode()){
-            <div class="min-w-50% min-h-[360px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
-                <img class="mx-auto object-center justify-self-centerobject-contain max-w-fill max-h-fill" src="/mao_zedong.png">
-            </div>
+            <input type="file" id="file_upload" name="upload_field" /><br />
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
-                @if(chara_data_set()?.name != undefined){
-                    <input class="bg-gray-300 text-4xl text-center" value="{{chara_data_set()?.name}}">
-                }
-                @else{
-                    <input class="bg-gray-300 text-4xl text-center" value="Enter a new name">
-                }
+                <!-- Name and Subtitle -->
+                <input class="bg-gray-300 title_input box-border size-fit text-6xl display-block mx-auto text-center object-center" value="{{chara_data_set()?.name}}">
+                <div class="pt-3 pb-3">
+                    <input class="bg-gray-300 subtitle_input box-border size-fit text-xl display-block mx-auto object-center text-center" value="{{chara_data_set()?.subtitle}}">
+                </div>
+                <mat-divider class="pt-2"></mat-divider>
+                <!-- Important Relationship Traits -->
+                <div class="grid grid-rows-3 grid-cols-2">
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-1">Relationship With Party: </h1>
+                    <input class="bg-gray-300 box-border size-fit text-2xl display-block mx-auto text-center" value="{{chara_data_set()?.name}}">
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-2"> Status: </h1>
+                    <input class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" value="{{chara_data_set()?.name}}">
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-3">Faction Member: </h1>
+                    <input class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" value="{{chara_data_set()?.name}}">
+                </div>
             </div>
-                <div class="row-span-1 col-span-2 row-start-2 col-start-1 p-3">
-                @if(chara_data_set()?.name != undefined){
-                    <input class="bg-gray-300 text-4xl text-center" value="{{chara_data_set()?.name}}">
-                }
-                @else{
-                    <input class="bg-gray-300 text-4xl text-center" value="Enter a new name">
-                }
+            <div class="row-span-1 col-span-2 row-start-2 col-start-1">
+                <div class="grid grid-rows-1 grid-cols-1">
+                    <mat-divider class="object-bottom"></mat-divider>
+                    <h1 class="justify-left text-4xl font-semibold p-4">Biography</h1>
+                    <textarea class="bg-gray-300 field-sizing-content box-border object-fill display-block jusitfy-left text-xl pt-2">{{chara_data_set()?.bio}}</textarea>
+                </div>
+            </div>
+            <div class="col-span-1 row-span-1 row-start-auto col-start-1">
+                <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>
+                <button matButton type="Submit" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" (click)="$event.preventDefault(); modify_chara_data();">Apply Changes</button>
             </div>
         }
         @else{
+        <!-- Character Display Mode -->
+            <!-- Character Image -->
             <div class="min-w-50% min-h-[720px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
                 <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="/Clueless.webp">
             </div>
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
-                <h1 class="text-4xl text-center">{{chara_data_set()?.name}}</h1>
-                <button matButton (click)="this.set_to_edit.emit(true)">Edit</button>
+                <!-- Name and Subtitle -->
+                <h1 class="text-6xl text-center">{{chara_data_set()?.name}}</h1>
+                <h1 class="text-xl pt-2 pb-2 text-center">{{chara_data_set()?.subtitle}}</h1>
+                <mat-divider class="pt-2"></mat-divider>
+                <!-- Important Relationship Traits -->
+                <div class="grid grid-rows-3 grid-cols-2">
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-1">Relationship With Party: </h1>
+                    <h1 class="text-3xl text-center col-span-1 row-span-1 col-start-2 row-start-1">{{chara_data_set()?.relation}}</h1>
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-2"> Status: </h1>
+                    <h1 class="text-3xl text-center col-span-1 row-span-1 col-start-2 row-start-2">{{chara_data_set()?.status}}</h1>
+                    <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-3">Faction Member: </h1>
+                    <h1 class="text-3xl text-center col-span-1 row-span-1 col-start-2 row-start-3">{{chara_data_set()?.faction}}</h1>
+                </div>
             </div>
-            <button type="" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" mat-button (click)="return_to_select()">Return To Character Select</button>
+            <div class="row-span-1 col-span-2 row-start-2 col-start-1">
+                <mat-divider class="object-bottom"></mat-divider>
+                <h1 class="justify-left text-4xl font-semibold pt-2">Biography</h1>
+                <h1 class="jusitfy-left text-xl pt-2 wrap-anywhere">{{chara_data_set()?.bio}}</h1>
+            </div>
+            <button type="" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>
+            <button matButton class="col-span-1 row-span-1 size-auto row-start-5 col-start-2" (click)="$event.preventDefault(); set_to_edit_handler()">Edit</button>
         }
     </div>
 </form>

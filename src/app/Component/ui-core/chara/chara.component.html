@@ -6,9 +6,8 @@
     }
 
     .mat-sidenav-container {
-        position: fixed;
-        height: 100%;
-        min-height: 100%;
+        position:fixed;
+        height: calc(100vh - 64px);
         width: 100%;
         min-width: 100%;
     }
@@ -23,8 +22,8 @@
     }
     .chara_card{
         max-height: 400px;
-        min-width: 200px;
-        max-width: 200px
+        min-width: 300px;
+        max-width: 400px
     }
     .textarea{
         resize:none
@@ -33,10 +32,14 @@
         width: auto;
         height: auto
     }
+    .card_container{
+        max-height: calc(100vh - 64px)
+    }
+
 </style>
 
-<mat-sidenav-container>
-    <mat-sidenav opened [disableClose]="true" mode="side">
+<mat-sidenav-container class="top-64px">
+    <mat-sidenav class="overflow-y-auto" opened [disableClose]="true" mode="side">
         @for (group of group_data(); track group) {
             <div class="grid grid-cols-4 grid-rows-1" (click) = "change_selected_group(group)">
                 <div class="col-span-3 col-start-1">{{group}}</div>
@@ -58,51 +61,50 @@
     </mat-sidenav>
     <mat-sidenav-content>
         @if(!inspecting_character){
-            <div class="flex flex-wrap gap-4 justify-content">
-            @for (chara of selected_chara_list(); track chara.key){
+            <div class="card_container ps-4">
+                <div class="p-4 overflow-y-scroll flex flex-wrap gap-4 justify-content">
+                @for (chara of selected_chara_list(); track chara.key){
+                    <mat-card class="chara_card">
+                        <mat-card-header>
+                            <div class="grid grid-cols-5 grid-rows-1">
+                                <mat-card-title-group class="col-span-4 col-start-1">
+                                    <mat-card-title>{{chara.name}}</mat-card-title>
+                                    <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
+                                </mat-card-title-group>
+                                <button type="" class="col-span-1 col-start-5 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
+                            </div>
+                        </mat-card-header>
+                        <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
+                        <mat-card-content>
+                            {{chara.subtitle}}
+                        </mat-card-content>
+                    </mat-card>
+                }
                 <mat-card class="chara_card">
                     <mat-card-header>
                         <mat-card-title-group>
                             <mat-card-title>
                             <div class="grid grid-cols-4 grid-rows-1">
-                                <div class="col-span-3 col-start-1">{{chara.name}}</div>
-                                <button type="" class="col-span-1 col-start-4 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
+                                <div class="col-span-3 col-start-1">New Character</div>
+                                <button type="" class="col-span-1 col-start-4 size-auto" mat-button (click)="make_new_character()">+</button>
                             </div>
                             </mat-card-title>
-                            <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
+                            <mat-card-subtitle></mat-card-subtitle>
                         </mat-card-title-group>
                     </mat-card-header>
-                    <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
                     <mat-card-content>
-                        {{chara.subtitle}}
+                        Make a new character?
                     </mat-card-content>
                 </mat-card>
-            }
-            <mat-card class="chara_card">
-                <mat-card-header>
-                    <mat-card-title-group>
-                        <mat-card-title>
-                        <div class="grid grid-cols-4 grid-rows-1">
-                            <div class="col-span-3 col-start-1">New Character</div>
-                            <button type="" class="col-span-1 col-start-4 size-auto" mat-button (click)="make_new_character()">+</button>
-                        </div>
-                        </mat-card-title>
-                        <mat-card-subtitle></mat-card-subtitle>
-                    </mat-card-title-group>
-                </mat-card-header>
-                <mat-card-content>
-                    Make a new character?
-                </mat-card-content>
-            </mat-card>
+                </div>
             </div>
         }
         @else {
             <app-chara-details
                 [chara_key] = "selected_chara_key"
                 [edit_mode] = "in_edit_mode()"
-                (set_to_edit) = "this.in_edit_mode.set(true)"
+                (set_to_edit) = "set_edit_mode($event)"
                 (return) = "return_to_chara_list()"/>
         }
-    
     </mat-sidenav-content>
 </mat-sidenav-container>

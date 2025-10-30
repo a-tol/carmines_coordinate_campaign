@@ -6,5 +6,5 @@ export interface CharaData {
     subtitle: string,
     faction: string,
     relation: string,
-    alive: boolean
+    status: string
 }

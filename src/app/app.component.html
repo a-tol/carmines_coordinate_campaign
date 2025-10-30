@@ -141,46 +141,46 @@
 
   .mat-sidenav-container {
     position: fixed;
-    height: 100%;
+    top: 64px;
     min-height: 100%;
     width: 100%;
     min-width: 100%;
   }
 
   .mat-toolbar{
+    max-height: 100%;
     background-color: cadetblue
   }
 
 </style>
 
-<div class="min-h-min min-w-min">
-  <mat-toolbar>
-    <button class="mat-button" mat-raised-button (click)="sidenav.toggle()">Menu</button>
-    <span>Campaign Name HERE</span>
-  </mat-toolbar>
-  <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="over">       
-      <button class="sidenav-button" mat-button (click)="swap_mode(0)">Home</button>
-      <mat-divider/>
-      <button class="sidenav-button" mat-button (click)="swap_mode(1)">Characters</button>
-      <mat-divider/>
-      <button class="sidenav-button" mat-button (click)="swap_mode(2)">Items</button>
-      <mat-divider/>
-      <button class="sidenav-button" mat-button (click)="swap_mode(3)">Logs</button>
-      <mat-divider/>
-      <button class="sidenav-button" mat-button (click)="swap_mode(4)">Map</button>
-      <mat-divider/>
-      <button class="sidenav-button" mat-button>Change Campaign</button>
-      <mat-divider/>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <div class="min-h-screen">
-        <app-ui-core  [set_mode] = "mode()">
-        </app-ui-core>
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</div>
+
+<mat-toolbar>
+  <button class="mat-button" mat-raised-button (click)="sidenav.toggle()">Menu</button>
+  <span>Campaign Name HERE</span>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over">       
+    <button class="sidenav-button" mat-button (click)="swap_mode(0)">Home</button>
+    <mat-divider/>
+    <button class="sidenav-button" mat-button (click)="swap_mode(1)">Characters</button>
+    <mat-divider/>
+    <button class="sidenav-button" mat-button (click)="swap_mode(2)">Items</button>
+    <mat-divider/>
+    <button class="sidenav-button" mat-button (click)="swap_mode(3)">Logs</button>
+    <mat-divider/>
+    <button class="sidenav-button" mat-button (click)="swap_mode(4)">Map</button>
+    <mat-divider/>
+    <button class="sidenav-button" mat-button>Change Campaign</button>
+    <mat-divider/>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="min-h-screen">
+      <app-ui-core class="min-h-screen" [set_mode] = "mode()">
+      </app-ui-core>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->

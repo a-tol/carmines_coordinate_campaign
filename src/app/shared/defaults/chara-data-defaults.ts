@@ -5,11 +5,11 @@ export const chara_data_list_default : CharaData[] = [
       key: "good_man1",
       group: "group1",
       faction: "good",
-      bio: "he good man 1",
+      bio: "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf",
       subtitle: "the first good man",
       relation: "friendly",
-      name: "man 1",
-      alive: true
+      name: "Smity Werben Jaegerman Jensen",
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -19,7 +19,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -29,7 +29,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -39,7 +39,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -49,7 +49,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -59,7 +59,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "alive"
     },
         {
       key: "good_man1",
@@ -69,7 +69,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "dead"
     },
         {
       key: "good_man1",
@@ -79,7 +79,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "dead"
     },
         {
       key: "good_man1",
@@ -89,7 +89,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "dead"
     },
         {
       key: "good_man1",
@@ -99,7 +99,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "dead"
     },
         {
       key: "good_man1",
@@ -109,7 +109,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "dead"
     },
         {
       key: "good_man1",
@@ -119,7 +119,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first good man",
       relation: "friendly",
       name: "man 1",
-      alive: true
+      status: "????"
     },
     {
       key: "evil_man1",
@@ -129,7 +129,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the first evil man",
       relation: "hostile",
       name: "evil man",
-      alive: false
+      status: "missing"
     },
     {
       key: "good_man2",
@@ -139,7 +139,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the second good man",
       relation: "friendly",
       name: "man 2",
-      alive: true
+      status: "????"
     },
     {
       key: "evil_man2",
@@ -149,7 +149,7 @@ export const chara_data_list_default : CharaData[] = [
       subtitle: "the second evil man",
       relation: "hostile",
       name: "evil man 2",
-      alive: false
+      status: "missing"
     }
   ]
 

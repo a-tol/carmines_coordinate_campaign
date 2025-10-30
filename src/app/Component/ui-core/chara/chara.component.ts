@@ -70,6 +70,11 @@ export class CharaComponent {
     this.in_edit_mode.set(true);
   }
 
+  set_edit_mode(chara_key : string){
+    this.selected_chara_key = chara_key;
+    this.in_edit_mode.set(true);
+  }
+
   set_group_name(value : any){
     this.new_group_name.set(value);
   }
