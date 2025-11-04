@@ -1,10 +1,16 @@
-export interface CharaData {
+import { CharaDataEntry } from "./chara-data-entries";
+
+export interface CharaData extends CharaBrief {
+    bio: string,
+    faction: string,
+    relation: string,
+    status: string,
+    entries : CharaDataEntry[]
+}
+
+export interface CharaBrief {
     key: string,
     group: string,
     name: string,
-    bio: string,
     subtitle: string,
-    faction: string,
-    relation: string,
-    status: string
 }

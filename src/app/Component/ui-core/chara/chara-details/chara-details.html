@@ -25,32 +25,80 @@
             <input type="file" id="file_upload" name="upload_field" /><br />
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
                 <!-- Name and Subtitle -->
-                <input class="bg-gray-300 title_input box-border size-fit text-6xl display-block mx-auto text-center object-center" value="{{chara_data_set()?.name}}">
+                <input 
+                    [id]="chara_submit_config[2].id"
+                    [type]="chara_submit_config[2].type"
+                    class="bg-gray-300 title_input box-border size-fit text-6xl display-block mx-auto text-center object-center" 
+                    value="{{chara_data_set()?.name}}"
+                >
                 <div class="pt-3 pb-3">
-                    <input class="bg-gray-300 subtitle_input box-border size-fit text-xl display-block mx-auto object-center text-center" value="{{chara_data_set()?.subtitle}}">
+                    <input 
+                    [id]="chara_submit_config[4].id"
+                    [type]="chara_submit_config[4].type"
+                    class="bg-gray-300 subtitle_input box-border size-fit text-xl display-block mx-auto object-center text-center"
+                    value="{{chara_data_set()?.subtitle}}"
+                >
                 </div>
                 <mat-divider class="pt-2"></mat-divider>
                 <!-- Important Relationship Traits -->
                 <div class="grid grid-rows-3 grid-cols-2">
                     <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-1">Relationship With Party: </h1>
-                    <input class="bg-gray-300 box-border size-fit text-2xl display-block mx-auto text-center" value="{{chara_data_set()?.name}}">
+                    <input
+                        [id] = "chara_submit_config[6].id"
+                        [type] = "chara_submit_config[6].type"
+                        class="bg-gray-300 box-border size-fit text-2xl display-block mx-auto text-center" 
+                        value="{{chara_data_set()?.name}}">
                     <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-2"> Status: </h1>
-                    <input class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" value="{{chara_data_set()?.name}}">
+                    <input 
+                        [id]="chara_submit_config[7].id"
+                        [type] = "chara_submit_config[7].type"
+                        class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" 
+                        value="{{chara_data_set()?.name}}">
                     <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-3">Faction Member: </h1>
-                    <input class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" value="{{chara_data_set()?.name}}">
+                    <input 
+                        [id]="chara_submit_config[5].id"
+                        [type]="chara_submit_config[5].type"
+                        class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" 
+                        value="{{chara_data_set()?.name}}">
                 </div>
             </div>
+            <!-- Biography -->
             <div class="row-span-1 col-span-2 row-start-2 col-start-1">
                 <div class="grid grid-rows-1 grid-cols-1">
                     <mat-divider class="object-bottom"></mat-divider>
                     <h1 class="justify-left text-4xl font-semibold p-4">Biography</h1>
-                    <textarea class="bg-gray-300 field-sizing-content box-border object-fill display-block jusitfy-left text-xl pt-2">{{chara_data_set()?.bio}}</textarea>
+                    <textarea 
+                        [id] = "chara_submit_config[3].id"
+                        class="bg-gray-300 field-sizing-content box-border object-fill display-block justify-left text-xl pt">{{chara_data_set()?.bio}}</textarea>
                 </div>
             </div>
+            <!-- Character Log Entries  -->
+            @for(entry of chara_log_set(); track entry.index){
+                <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
+                    <div class="grid grid-rows-1 grid-cols-1">
+                        <textarea
+                            [id] = "entry.index"
+                            class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">{{entry.title}}</textarea>
+                        <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">{{entry.entry}}</textarea>
+                        <mat-divider class="object-bottom"></mat-divider>
+                    </div>
+                </div>
+            }
+            <!-- Field For New Entry -->
+            <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
+                <div class="grid grid-rows-1 grid-cols-1">
+                    <textarea class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">New Entry</textarea>
+                    <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">New Entry Contents</textarea>
+                    <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); submit_log_entry()">Submit Log Entry</button>
+                    <mat-divider class="object-bottom"></mat-divider>
+                </div>
+            </div>
+            <!-- Navigation/Modification Buttons -->
             <div class="col-span-1 row-span-1 row-start-auto col-start-1">
                 <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>
-                <button matButton type="Submit" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" (click)="$event.preventDefault(); modify_chara_data();">Apply Changes</button>
+                <button matButton type="Submit" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" (click)="$event.preventDefault(); modify_chara_data();">Apply All Changes</button>
             </div>
+            
         }
         @else{
         <!-- Character Display Mode -->
@@ -76,10 +124,17 @@
             <div class="row-span-1 col-span-2 row-start-2 col-start-1">
                 <mat-divider class="object-bottom"></mat-divider>
                 <h1 class="justify-left text-4xl font-semibold pt-2">Biography</h1>
-                <h1 class="jusitfy-left text-xl pt-2 wrap-anywhere">{{chara_data_set()?.bio}}</h1>
+                <h1 class="justify-left text-xl pt-2 wrap-anywhere">{{chara_data_set()?.bio}}</h1>
             </div>
-            <button type="" class="col-span-1 row-span-1 size-auto row-start-5 col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>
-            <button matButton class="col-span-1 row-span-1 size-auto row-start-5 col-start-2" (click)="$event.preventDefault(); set_to_edit_handler()">Edit</button>
+            @for(entry of chara_log_set(); track entry.index){
+                <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12">
+                    <mat-divider class="object-bottom"></mat-divider>
+                    <h1 class="justify-left text-4xl font-semibold pt-2">{{entry.title}}</h1>
+                    <h1 class="justify-left text-xl pt-2 wrap-anywhere">{{entry.entry}}</h1>
+                </div>
+            }
+            <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>
+            <button matButton class="col-span-1 row-span-1 size-auto row-start-auto col-start-2" (click)="$event.preventDefault(); set_to_edit_handler()">Edit</button>
         }
     </div>
 </form>
