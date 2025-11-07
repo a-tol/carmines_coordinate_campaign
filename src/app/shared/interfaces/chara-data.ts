@@ -9,8 +9,9 @@ export interface CharaData extends CharaBrief {
 }
 
 export interface CharaBrief {
-    key: string,
+    key: number,
     group: string,
     name: string,
     subtitle: string,
+    img_filename: string | undefined
 }

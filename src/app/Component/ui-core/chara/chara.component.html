@@ -69,14 +69,13 @@
                             <div class="grid grid-cols-5 grid-rows-1">
                                 <mat-card-title-group class="col-span-4 col-start-1">
                                     <mat-card-title>{{chara.name}}</mat-card-title>
-                                    <mat-card-subtitle>{{chara.faction}}</mat-card-subtitle>
+                                    <mat-card-subtitle>{{chara.subtitle}}</mat-card-subtitle>
                                 </mat-card-title-group>
                                 <button type="" class="col-span-1 col-start-5 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
                             </div>
                         </mat-card-header>
                         <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
                         <mat-card-content>
-                            {{chara.subtitle}}
                         </mat-card-content>
                     </mat-card>
                 }
@@ -101,7 +100,8 @@
         }
         @else {
             <app-chara-details
-                [chara_key] = "selected_chara_key"
+                [selected_group] = "selected_group()"
+                [chara_key] = "selected_chara_key()"
                 [edit_mode] = "in_edit_mode()"
                 (set_to_edit) = "set_edit_mode($event)"
                 (return) = "return_to_chara_list()"/>

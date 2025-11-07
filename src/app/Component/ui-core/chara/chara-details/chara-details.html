@@ -47,19 +47,19 @@
                         [id] = "chara_submit_config[6].id"
                         [type] = "chara_submit_config[6].type"
                         class="bg-gray-300 box-border size-fit text-2xl display-block mx-auto text-center" 
-                        value="{{chara_data_set()?.name}}">
+                        value="{{chara_data_set()?.relation}}">
                     <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-2"> Status: </h1>
                     <input 
                         [id]="chara_submit_config[7].id"
                         [type] = "chara_submit_config[7].type"
                         class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" 
-                        value="{{chara_data_set()?.name}}">
+                        value="{{chara_data_set()?.status}}">
                     <h1 class="text-3xl col-span-1 row-span-1 col-start-1 row-start-3">Faction Member: </h1>
                     <input 
                         [id]="chara_submit_config[5].id"
                         [type]="chara_submit_config[5].type"
                         class="bg-gray-300 box-border size-fit display-block mx-auto text-2xl text-center" 
-                        value="{{chara_data_set()?.name}}">
+                        value="{{chara_data_set()?.faction}}">
                 </div>
             </div>
             <!-- Biography -->
@@ -85,14 +85,16 @@
                 </div>
             }
             <!-- Field For New Entry -->
-            <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
-                <div class="grid grid-rows-1 grid-cols-1">
-                    <textarea class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">New Entry</textarea>
-                    <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">New Entry Contents</textarea>
-                    <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); submit_log_entry()">Submit Log Entry</button>
-                    <mat-divider class="object-bottom"></mat-divider>
+             @if(chara_key() != -1){
+                <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
+                    <div class="grid grid-rows-1 grid-cols-1">
+                        <textarea class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">New Entry</textarea>
+                        <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">New Entry Contents</textarea>
+                        <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); submit_log_entry()">Submit Log Entry</button>
+                        <mat-divider class="object-bottom"></mat-divider>
+                    </div>
                 </div>
-            </div>
+            }
             <!-- Navigation/Modification Buttons -->
             <div class="col-span-1 row-span-1 row-start-auto col-start-1">
                 <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); return_to_select()">Return To Character Select</button>

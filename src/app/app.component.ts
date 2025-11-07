@@ -1,4 +1,4 @@
-import { Component, signal, output, ElementRef, viewChild} from '@angular/core';
+import { Component, signal, output, ElementRef, viewChild, inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'
 import { MatCardModule } from "@angular/material/card"
@@ -9,6 +9,8 @@ import { UiCoreComponent } from './Component/ui-core/ui-core.component';
 import { Mode } from "./shared/interfaces/mode"
 import { mode_default } from './shared/defaults/mode-defaults';
 import { DOCUMENT } from "@angular/common"
+import { DBRequestor } from './shared/services/dbrequestor';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -20,13 +22,22 @@ import { DOCUMENT } from "@angular/common"
 
 export class AppComponent {
 
+  db_service = inject(DBRequestor)
   sidenav = viewChild(MatSidenav)
+
+  check_sub : Subscription | undefined
 
   title = 'DND_campaign_front';
   mode = signal<Mode>(mode_default);
 
   ngOnInit(){
+    //initialize the database, if there is no character.
+    console.log("Attempting to check or initialize the database.")
+    this.check_sub = this.db_service.check_or_initialize_database()
+  }
 
+  ngOnDestroy(){
+    this.check_sub?.unsubscribe()
   }
 
   swap_mode(mode : number){

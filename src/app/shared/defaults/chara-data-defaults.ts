@@ -2,7 +2,7 @@ import { CharaData } from "../interfaces/chara-data"
 
 export const chara_data_list_default : CharaData[] = [
     {
-      key: "good_man1",
+      key: 0,
       group: "group1",
       faction: "good",
       bio: "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf",
@@ -10,10 +10,11 @@ export const chara_data_list_default : CharaData[] = [
       relation: "friendly",
       name: "Smity Werben Jaegerman Jensen",
       status: "alive",
-      entries: [{index: 0, title: "Invisible", entry: "Metal Gear Solid 5"}]
+      entries: [{index: 0, title: "Invisible", entry: "Metal Gear Solid 5"}],
+      img_filename : undefined
     },
     {
-      key: "evil_man1",
+      key: 1,
       group: "group2",
       faction: "evil",
       bio: "he evil man 1",
@@ -21,10 +22,11 @@ export const chara_data_list_default : CharaData[] = [
       relation: "hostile",
       name: "evil man",
       status: "missing",
-      entries: [{index: 0, title: "Snake Eater", entry: "Metal Gear Solid 3"}]
+      entries: [{index: 0, title: "Snake Eater", entry: "Metal Gear Solid 3"}],
+      img_filename : undefined
     },
     {
-      key: "good_man2",
+      key: 2,
       group: "group1",
       faction: "good",
       bio: "he good man",
@@ -32,10 +34,11 @@ export const chara_data_list_default : CharaData[] = [
       relation: "friendly",
       name: "man 2",
       status: "????",
-      entries: [{index: 0, title: "Alert!", entry: "Metal Gear Solid"}]
+      entries: [{index: 0, title: "Alert!", entry: "Metal Gear Solid"}],
+      img_filename : undefined
     },
     {
-      key: "evil_man2",
+      key: 3,
       group: "group3",
       faction: "evil",
       bio: "he evil man 1",
@@ -43,8 +46,22 @@ export const chara_data_list_default : CharaData[] = [
       relation: "hostile",
       name: "evil man 2",
       status: "missing",
-      entries: [{index: 0, title: "Guns of the Patriots", entry: "Metal Gear Solid 4"}]
+      entries: [{index: 0, title: "Guns of the Patriots", entry: "Metal Gear Solid 4"}],
+      img_filename : undefined
     }
   ]
 
 export const group_data_list_default : string[] = ['group1', 'group2', 'group3', 'group4']
+
+export const character_default : CharaData =  {
+  key: -1,
+  name: "[Character Name]",
+  subtitle: "[Engaging Subtitle]",
+  group: "group",
+  bio: "Character Biography Here",
+  relation:"[Party Relationship]",
+  faction:"[Faction]",
+  status: "[Alive, Dead, etc.]",
+  entries: [],
+  img_filename : undefined
+}
