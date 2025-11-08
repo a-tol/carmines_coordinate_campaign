@@ -2,7 +2,19 @@ import { CharaData } from "../interfaces/chara-data"
 
 export const chara_data_list_default : CharaData[] = [
     {
-      key: 0,
+      key: "",
+      group: "",
+      faction: "",
+      bio: "",
+      subtitle: "",
+      relation: "",
+      name: "",
+      status: "",
+      entries: [],
+      img_filename : undefined
+    },
+    {
+      key: "smitty",
       group: "group1",
       faction: "good",
       bio: "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf",
@@ -14,7 +26,7 @@ export const chara_data_list_default : CharaData[] = [
       img_filename : undefined
     },
     {
-      key: 1,
+      key: "EVIL",
       group: "group2",
       faction: "evil",
       bio: "he evil man 1",
@@ -26,7 +38,7 @@ export const chara_data_list_default : CharaData[] = [
       img_filename : undefined
     },
     {
-      key: 2,
+      key: "sllim shady",
       group: "group1",
       faction: "good",
       bio: "he good man",
@@ -38,7 +50,7 @@ export const chara_data_list_default : CharaData[] = [
       img_filename : undefined
     },
     {
-      key: 3,
+      key: "big balls",
       group: "group3",
       faction: "evil",
       bio: "he evil man 1",
@@ -54,7 +66,7 @@ export const chara_data_list_default : CharaData[] = [
 export const group_data_list_default : string[] = ['group1', 'group2', 'group3', 'group4']
 
 export const character_default : CharaData =  {
-  key: -1,
+  key: "-1",
   name: "[Character Name]",
   subtitle: "[Engaging Subtitle]",
   group: "group",

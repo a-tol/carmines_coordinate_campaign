@@ -173,45 +173,40 @@ app.post("/api/insert_chara", async (req, res) => {
 
 //update an existing character in the database
 app.post("/api/update_chara", async (req, res) => {
-    //establish database connection
-    // await client.connect();
-    // const db = client.db("campaign_db")
+    // establish database connection
+    await client.connect();
+    const db = client.db("campaign_db")
 
-    // //if the user collection db does not exist, make it then add a unique index on the usernames
-    // if(!(await db.listCollections({name : "characters"}).hasNext())){
-    //     // await (await db.createCollection("characters")).createIndex({key : 1}, {unique : true})
-    //     await db.createCollection("characters")
-    // }
+    //if the user collection db does not exist, make it then add a unique index on the usernames
+    if(!(await db.listCollections({name : "characters"}).hasNext())){
+        // await (await db.createCollection("characters")).createIndex({key : 1}, {unique : true})
+        await db.createCollection("characters")
+    }
 
-    // const character_collection = db.collection("characters")
-    // const chara_details : CharaData = req.body
+    const character_collection = db.collection("characters")
+    const chara_details : CharaData = req.body
     
-    // if(chara_details.key=="newchara"){
-    //     await character_collection.insertOne(chara_details).catch((reason) =>{
-    //         console.log("Unsuccessful Account Creation")
-    //         return;
-    //     });
-    // }else{
-    //     const filter = {_id : chara_details.key}
-    //     const action = {$set : {
-            
-    //         name: chara_details.name,
-    //         group : chara_details.group,
-    //         subtitle : chara_details.subtitle,
-    //         bio : chara_details.bio,
-    //         faction: chara_details.faction,
-    //         relation: chara_details.relation,
-    //         status: chara_details.status,
-    //         entries: chara_details.entries
+    const filter = {_id : new ObjectId(chara_details.key)}
+    const action = {$set : {
+        
+        name: chara_details.name,
+        group : chara_details.group,
+        subtitle : chara_details.subtitle,
+        bio : chara_details.bio,
+        faction: chara_details.faction,
+        relation: chara_details.relation,
+        status: chara_details.status,
+        entries: chara_details.entries
 
-    //     }};
-    //     await character_collection.updateOne(filter, action).catch((reason) =>{
-    //         console.log("Unsuccessful Account Creation")
-    //         return;
-    //     });
-    // }
+    }};
 
-    res.send("Success")
+    await character_collection.updateOne(filter, action).catch((reason) =>{
+        console.log("Unsuccessful Account Creation", reason)
+        res.json({"1" : "Perish!"})
+        return;
+    });
+
+    res.json({"0" : "Changes probably made"})
 
 })
 
@@ -250,7 +245,7 @@ app.post("/api/remove_chara", async (req, res) => {
 })
 
 //logout by clearing cookie
-app.get("/api/insert_chara_log", async (req, res) =>{
+app.get("/api/clear_cookie", async (req, res) =>{
     //establish database connection
     await client.connect()
     const db = client.db("bookstore_db")

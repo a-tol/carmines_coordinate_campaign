@@ -31,7 +31,7 @@ export class DBRequestor {
   }
 
   //POST to remove a character from the database
-  remove_chara(chara_key : number){
+  remove_chara(chara_key : string){
     this.http.post((this.API_BASE_URL + "/remove_chara"), chara_key).subscribe({
       next : (response) => {console.log("Character Removed?")},
       error : (response) => {console.log("Error! character not removed")}
@@ -39,7 +39,7 @@ export class DBRequestor {
   }
 
   //GET to receive character details
-  get_chara_details(chara_key: number) : Observable<CharaData>{
+  get_chara_details(chara_key: string) : Observable<CharaData>{
     return this.http.get<CharaData>(
       (this.API_BASE_URL + "/get_chara"),
       {
@@ -61,11 +61,8 @@ export class DBRequestor {
   }
 
   //POST to update character details using CharaData object
-  update_chara_details(chara_details : CharaData){
-    this.http.post((this.API_BASE_URL + "/update_chara"), chara_details).subscribe({
-      next : (response) => {console.log("Character Updated?")},
-      error : (response) => {console.log("Error! character not updated")}
-    })
+  update_chara_details(chara_details : CharaData) : Observable<string> {
+    return this.http.post<string>((this.API_BASE_URL + "/update_chara"), chara_details)
   }
 
   //POST to insert a new character
@@ -74,7 +71,7 @@ export class DBRequestor {
   }
 
   //POST to insert a single chara data log entry
-  insert_single_chara_log_entry(chara_key : number, entry: CharaDataEntry){
+  insert_single_chara_log_entry(chara_key : string, entry: CharaDataEntry){
     this.http.post((this.API_BASE_URL + "/insert_chara_log"), {key : chara_key, entry : entry}).subscribe({
       next : (response) => {console.log("Character log entry inserted?")},
       error : (response) => {console.log("Error! character log entry not removed")}
@@ -82,7 +79,7 @@ export class DBRequestor {
   }
 
   //POST to remove a single chara data log entry
-  remove_single_chara_log_entry(chara_key : number, entry_index : number){
+  remove_single_chara_log_entry(chara_key : string, entry_index : number){
     this.http.post((this.API_BASE_URL + "/remove_chara_log"), {key : chara_key, index : entry_index}).subscribe({
       next : (response) => {console.log("Character log entry removed?")},
       error : (response) => {console.log("Error! character log entry not removed")}

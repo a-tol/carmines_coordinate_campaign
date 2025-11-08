@@ -60,7 +60,12 @@
         <mat-divider></mat-divider>
     </mat-sidenav>
     <mat-sidenav-content>
-        @if(!inspecting_character){
+        @if(selected_group() == "default"){
+            <div class="grid grid-cols-1 grid-rows-1">
+                <h1 class="mx-auto object-center text-center text-6xl pt-12">Select a group on the left!</h1>
+            </div>
+        }
+        @else if(!inspecting_character){
             <div class="card_container ps-4">
                 <div class="p-4 overflow-y-scroll flex flex-wrap gap-4 justify-content">
                 @for (chara of selected_chara_list(); track chara.key){

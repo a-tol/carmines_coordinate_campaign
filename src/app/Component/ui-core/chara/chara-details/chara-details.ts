@@ -11,10 +11,11 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DBRequestor } from '../../../../shared/services/dbrequestor';
 import { AsyncPipe } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms'
 
 @Component({
   selector: 'app-chara-details',
-  imports: [MatButtonModule, MatDividerModule],
+  imports: [MatButtonModule, MatDividerModule, FormsModule],
   templateUrl: './chara-details.html',
   styleUrl: './chara-details.css'
 })
@@ -22,11 +23,11 @@ export class CharaDetailsComponent {
 
   db_service = inject(DBRequestor)
 
-  chara_key = input.required<number>();
+  chara_key = input.required<string>();
   selected_group = input.required<string>();
   return = output<Mode>();
   edit_mode = input<boolean>();
-  set_to_edit = output<number>();
+  set_to_edit = output<string>();
   chara_data_entries = signal(chara_data_entries_defaults);
   chara_submit_config = chara_submit_config
 
@@ -36,26 +37,29 @@ export class CharaDetailsComponent {
   chara_data_set = signal<CharaData>(chara_data_list_default[0])
   chara_log_set = computed<CharaDataEntry[] | undefined>(() => this.chara_data_set()?.entries)
 
+  private refresh_chara_details(){
+      this.subscriptions?.push(this.db_service.get_chara_details(this.chara_key()).subscribe({
+      next : (response) => {
+        console.log("Character data received?");
+        this.chara_data_set.set(response)
+      },
+      error : (response) => {
+        console.log("Error! character data not received")
+        return null;
+      }
+    }))
+  }
+
   ngOnInit(){
     this.subscriptions = []
-    if(this.chara_key() != -1){
-      this.chara_data_set_observ = this.db_service.get_chara_details(this.chara_key())
-      this.subscriptions?.push(this.chara_data_set_observ.subscribe({
-        next : (response) => {
-          console.log("Character data received?");
-          this.chara_data_set.set(response)
-        },
-        error : (response) => {
-          console.log("Error! character data not received")
-          return null;
-        }
-      }))
+    if(this.chara_key() != "-1"){
+      this.refresh_chara_details()
 
     }else{
       //default character ocnfiguration
       this.chara_data_set.set(
         {
-          key: -1,
+          key: "-1",
           name: "[Character Name]",
           subtitle: "[Engaging Subtitle]",
           group: this.selected_group(),
@@ -82,7 +86,7 @@ export class CharaDetailsComponent {
   modify_chara_data(){ 
     // this.db_service.update_chara_details(this.chara_data_set())
 
-    if(this.chara_key() == -1){
+    if(this.chara_key() == "-1"){
       //upload a new character   
       this.chara_data_set_observ = this.db_service.get_chara_details(this.chara_key())
       this.subscriptions?.push(this.chara_data_set_observ.subscribe({
@@ -97,11 +101,11 @@ export class CharaDetailsComponent {
       }))
     }else{
       //
-      this.chara_data_set_observ = this.db_service.get_chara_details(this.chara_key())
-      this.subscriptions?.push(this.chara_data_set_observ.subscribe({
+      this.subscriptions?.push(this.db_service.update_chara_details(this.chara_data_set()).subscribe({
         next : (response) => {
           console.log("Character data modified?");
-          this.chara_data_set.set(response)
+          this.refresh_chara_details();
+          this.return.emit({mode : "chara"})
         },
         error : (response) => {
           console.log("Error! character data not received")
@@ -118,5 +122,10 @@ export class CharaDetailsComponent {
   //todo: connect to database
   submit_log_entry(){
 
+  }
+
+  update_data_signal(id : string, to_val : string){
+    this.chara_data_set.update(data => {(data as any)[id] = to_val; return data;})
+    console.log("Updated data signal")
   }
 }

@@ -24,7 +24,7 @@ export class CharaComponent {
 
 
   //todo: mongodb query for UNIQUE GROUPS to fill list of groups
-  //      mongodb query for list of characters to fill character list
+  //      get stuff
 
   db_service =  inject(DBRequestor)
   subs : Subscription[] | undefined
@@ -39,7 +39,7 @@ export class CharaComponent {
 
   inspecting_character = false;
   in_edit_mode = signal<boolean>(false);
-  selected_chara_key = signal<number>(1);
+  selected_chara_key = signal<string>("-1");
 
   new_group_name = signal<string>("Create a new group...")
   group_submit_config = gsc
@@ -85,7 +85,7 @@ export class CharaComponent {
     //todo
   }
 
-  open_details(chara_key : number){
+  open_details(chara_key : string){
     this.inspecting_character = true;
     this.selected_chara_key.set(chara_key);
     this.in_edit_mode.set(false);
@@ -93,6 +93,7 @@ export class CharaComponent {
 
   return_to_chara_list(){
     this.inspecting_character = false;
+    this.refresh_groups()
   }
 
   change_selected_group(to_group : string){
@@ -102,11 +103,11 @@ export class CharaComponent {
 
   make_new_character(){
     this.inspecting_character = true;
-    this.selected_chara_key.set(-1);
+    this.selected_chara_key.set("-1");
     this.in_edit_mode.set(true);
   }
 
-  set_edit_mode(chara_key : number){
+  set_edit_mode(chara_key : string){
     this.selected_chara_key.set(chara_key);
     this.in_edit_mode.set(true);
   }

@@ -9,7 +9,7 @@ export interface CharaData extends CharaBrief {
 }
 
 export interface CharaBrief {
-    key: number,
+    key: string,
     group: string,
     name: string,
     subtitle: string,
