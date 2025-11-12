@@ -42,3 +42,18 @@ export const chara_submit_config : SubmitConfig[] = [
         type : "text"
     }
 ]
+
+export const log_submit_config : SubmitConfig[] = [
+    {
+        id : "index",
+        type : "string"
+    },
+    {
+        id : "title",
+        type : "string"
+    },
+    {
+        id : "entry",
+        type : "string"
+    }
+]

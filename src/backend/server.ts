@@ -1,15 +1,15 @@
 //typescript is fun! i love typescript (a little less)
-const __dirname = import.meta.dirname
-const __filename = import.meta.filename
+const dname = import.meta.dirname
+const fname = import.meta.filename
 
 import express from "express"
-import { MongoClient, MongoCryptCreateEncryptedCollectionError, ServerApiVersion } from "mongodb"
+import { MongoClient} from "mongodb"
 import bodyParser from "body-parser"
 import multer, { diskStorage } from 'multer'
 import cookieParser from "cookie-parser"
 import path from "path"
 import cors from 'cors'
-import crypto from 'crypto'
+import {hash} from 'crypto'
 import fs from 'fs'
 import { CharaData } from "../app/shared/interfaces/chara-data"
 import { FOCUS_MONITOR_DEFAULT_OPTIONS } from "@angular/cdk/a11y"
@@ -17,6 +17,8 @@ import { character_default } from "../app/shared/defaults/chara-data-defaults"
 import { filter } from "rxjs"
 import { error } from "console"
 import { ObjectId } from "mongodb"
+import { fileURLToPath } from "url"
+import { CharaDataEntry } from "../app/shared/interfaces/chara-data-entries"
 
 const port = 8002
 
@@ -32,10 +34,25 @@ const app = express()
 //express middleware (json parser, disk storage interface, multipart/form-data body reader)
 const json_parser = bodyParser.json()
 app.use(json_parser)
-// const img_storage = multer.diskStorage({destination : path.join(__filename, "./public/user_img")})
-// const upload_middleware = multer({storage : img_storage})
+const img_storage = multer.diskStorage(
+    {
+        destination : resolve_saved_filepath(),
+        filename : (req, file, cb) => {
+            //make it a note only to store pngs
+            cb(null, hash('sha1', file.filename + Date.now().toString()) + '.png')
+        }
+    },
+)
+app.use(express.static(path.join(fileURLToPath(import.meta.url), "../../../public")))
+const upload_middleware = multer({storage : img_storage})
 const cookie_parser = cookieParser()
 app.use(cookie_parser)
+
+function resolve_saved_filepath(){
+    console.log("path is ", path.join(fileURLToPath(import.meta.url), "../../../public/user_img"))
+    return path.join(fileURLToPath(import.meta.url), "../../../public/user_img")
+}
+
 
 /* Utility Functions */
 
@@ -172,7 +189,7 @@ app.post("/api/insert_chara", async (req, res) => {
 })
 
 //update an existing character in the database
-app.post("/api/update_chara", async (req, res) => {
+app.post("/api/update_chara", upload_middleware.single('img'), async (req, res) => {
     // establish database connection
     await client.connect();
     const db = client.db("campaign_db")
@@ -185,6 +202,8 @@ app.post("/api/update_chara", async (req, res) => {
 
     const character_collection = db.collection("characters")
     const chara_details : CharaData = req.body
+    const img_file : Express.Multer.File | undefined = req.file
+    console.log("img file is " + img_file?.filename)
     
     const filter = {_id : new ObjectId(chara_details.key)}
     const action = {$set : {
@@ -196,7 +215,8 @@ app.post("/api/update_chara", async (req, res) => {
         faction: chara_details.faction,
         relation: chara_details.relation,
         status: chara_details.status,
-        entries: chara_details.entries
+        entries: chara_details.entries,
+        img_filename : img_file != undefined ? req.file?.filename : chara_details.img_filename
 
     }};
 
@@ -228,7 +248,7 @@ app.get("/api/get_chara",  async (req, res) => {
         _id : objectid_from_param
     }
     const options = {
-        projection: {"key" : "$_id", _id : 0, name : 1, group : 1, subtitle: 1, bio : 1, faction : 1, relation : 1, status : 1, entries : 1}
+        projection: {"key" : "$_id", _id : 0, name : 1, group : 1, subtitle: 1, bio : 1, faction : 1, relation : 1, status : 1, entries : 1, img_filename : 1}
     }
     const result = await character_collection.findOne(filter, options).catch((err) =>{
         console.log("DB error in get_chara")
@@ -265,12 +285,41 @@ app.get("/api/clear_cookie", async (req, res) =>{
 
 //endpoint to handle a new entry in the item database
 app.post("/api/remove_chara_log", async (req, res) => {
-
+    await client.connect()
+    const db = client.db("campaign_db")
+    const active_sessions = db.collection("active_sessions")
     
 })
 
 app.get("/api/get_chara_list", (req, res) => {
     res.send()
+})
+
+app.get("/api/insert_chara_log", async (req, res) => {
+    // establish database connection
+    await client.connect();
+    const db = client.db("campaign_db")
+
+    //if the user collection db does not exist, make it then add a unique index on the usernames
+    if(!(await db.listCollections({name : "characters"}).hasNext())){
+        // await (await db.createCollection("characters")).createIndex({key : 1}, {unique : true})
+        await db.createCollection("characters")
+    }
+
+    const character_collection = db.collection("characters")
+    const to_insert : {key : string, entry : CharaDataEntry} = req.body
+
+
+    const filter = {_id : new ObjectId(to_insert.key)}
+    const action = {$addToSet : {entries : to_insert.entry}};
+
+    await character_collection.updateOne(filter, action).catch((reason) =>{
+        console.log("Unsuccessful Log Entry Update", reason)
+        res.json({"1" : "Perish! the log was not updated"})
+        return;
+    });
+
+    res.json({"0" : "Changes probably made to log"})
 })
 
 

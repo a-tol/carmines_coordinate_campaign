@@ -22,7 +22,7 @@ export const chara_data_list_default : CharaData[] = [
       relation: "friendly",
       name: "Smity Werben Jaegerman Jensen",
       status: "alive",
-      entries: [{index: 0, title: "Invisible", entry: "Metal Gear Solid 5"}],
+      entries: [{ title: "Invisible", entry: "Metal Gear Solid 5"}],
       img_filename : undefined
     },
     {
@@ -34,7 +34,7 @@ export const chara_data_list_default : CharaData[] = [
       relation: "hostile",
       name: "evil man",
       status: "missing",
-      entries: [{index: 0, title: "Snake Eater", entry: "Metal Gear Solid 3"}],
+      entries: [{title: "Snake Eater", entry: "Metal Gear Solid 3"}],
       img_filename : undefined
     },
     {
@@ -46,7 +46,7 @@ export const chara_data_list_default : CharaData[] = [
       relation: "friendly",
       name: "man 2",
       status: "????",
-      entries: [{index: 0, title: "Alert!", entry: "Metal Gear Solid"}],
+      entries: [{title: "Alert!", entry: "Metal Gear Solid"}],
       img_filename : undefined
     },
     {
@@ -58,7 +58,7 @@ export const chara_data_list_default : CharaData[] = [
       relation: "hostile",
       name: "evil man 2",
       status: "missing",
-      entries: [{index: 0, title: "Guns of the Patriots", entry: "Metal Gear Solid 4"}],
+      entries: [{title: "Guns of the Patriots", entry: "Metal Gear Solid 4"}],
       img_filename : undefined
     }
   ]

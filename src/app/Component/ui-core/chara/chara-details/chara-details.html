@@ -22,7 +22,16 @@
     <div class="ml-1 grid grid-cols-4 grid-rows-auto">
         <!-- Character Edit Mode -->
         @if(edit_mode()){
-            <input type="file" id="file_upload" name="upload_field" /><br />
+            <!-- Character Image-->
+            <div class="min-w-50% min-h-[720px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
+                <input
+                    type="file"
+                    id="file_upload"
+                    name="upload_field"
+                    (change) = update_image($event.target.files)
+                />
+                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="{{image_filepath()}}">
+            </div>
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
                 <!-- Name and Subtitle -->
                 <input
@@ -86,12 +95,12 @@
                 </div>
             </div>
             <!-- Character Log Entries  -->
-            @for(entry of chara_log_set(); track entry.index){
+            @for(entry of chara_log_set(); track entry.title){
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
                     <div class="grid grid-rows-1 grid-cols-1">
                         <textarea
                             name = "bio"
-                            [id] = "entry.index"
+                            [id] = "entry.title"
                             class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">{{entry.title}}</textarea>
                         <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">{{entry.entry}}</textarea>
                         <mat-divider class="object-bottom"></mat-divider>
@@ -102,8 +111,19 @@
              @if(chara_key() != "-1"){
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
                     <div class="grid grid-rows-1 grid-cols-1">
-                        <textarea class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">New Entry</textarea>
-                        <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">New Entry Contents</textarea>
+                        <textarea 
+                            name="new_log_title"
+                            class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4"
+                            [id] = "log_submit_config[1].id"
+                            [ngModel]="new_log_entry_field().title"
+                            (ngModelChange) = "update_log_signal(log_submit_config[1].id, $event)"  
+                        ></textarea>
+                        <textarea 
+                            name="new_log_body"
+                            class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2"
+                            [id] = "log_submit_config[1].id"
+                            [ngModel]="new_log_entry_field().title"
+                            (ngModelChange) = "update_log_signal(log_submit_config[1].id, $event)"  ></textarea>
                         <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); submit_log_entry()">Submit Log Entry</button>
                         <mat-divider class="object-bottom"></mat-divider>
                     </div>
@@ -120,7 +140,7 @@
         <!-- Character Display Mode -->
             <!-- Character Image -->
             <div class="min-w-50% min-h-[720px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
-                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="/Clueless.webp">
+                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="/{{image_filepath()}}">
             </div>
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
                 <!-- Name and Subtitle -->
@@ -142,7 +162,7 @@
                 <h1 class="justify-left text-4xl font-semibold pt-2">Biography</h1>
                 <h1 class="justify-left text-xl pt-2 wrap-anywhere">{{chara_data_set()?.bio}}</h1>
             </div>
-            @for(entry of chara_log_set(); track entry.index){
+            @for(entry of chara_log_set(); track entry.title){
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12">
                     <mat-divider class="object-bottom"></mat-divider>
                     <h1 class="justify-left text-4xl font-semibold pt-2">{{entry.title}}</h1>

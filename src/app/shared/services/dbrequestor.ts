@@ -61,8 +61,13 @@ export class DBRequestor {
   }
 
   //POST to update character details using CharaData object
-  update_chara_details(chara_details : CharaData) : Observable<string> {
-    return this.http.post<string>((this.API_BASE_URL + "/update_chara"), chara_details)
+  update_chara_details(chara_details : CharaData, img : File | null) : Observable<string> {
+    const form_data = new FormData()
+    Object.keys(chara_details).map((key) => {form_data.append(key, (chara_details as any)[key])})
+    if(img != null){
+      form_data.append("img", img)
+    }
+    return this.http.post<string>((this.API_BASE_URL + "/update_chara"), form_data)
   }
 
   //POST to insert a new character

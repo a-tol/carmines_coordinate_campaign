@@ -4,7 +4,6 @@ export interface CharaDataEntryList {
 }
 
 export interface CharaDataEntry {
-    index : number;
     title : string;
     entry : string
 }
