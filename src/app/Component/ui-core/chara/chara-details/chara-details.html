@@ -30,7 +30,7 @@
                     name="upload_field"
                     (change) = update_image($event.target.files)
                 />
-                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="{{image_filepath()}}">
+                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" [src]="in_edit_image_url()"/>
             </div>
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
                 <!-- Name and Subtitle -->
@@ -121,9 +121,9 @@
                         <textarea 
                             name="new_log_body"
                             class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2"
-                            [id] = "log_submit_config[1].id"
-                            [ngModel]="new_log_entry_field().title"
-                            (ngModelChange) = "update_log_signal(log_submit_config[1].id, $event)"  ></textarea>
+                            [id] = "log_submit_config[2].id"
+                            [ngModel]="new_log_entry_field().entry"
+                            (ngModelChange) = "update_log_signal(log_submit_config[2].id, $event)"  ></textarea>
                         <button type="" class="col-span-1 row-span-1 size-auto row-start-auto col-start-1" mat-button (click)="$event.preventDefault(); submit_log_entry()">Submit Log Entry</button>
                         <mat-divider class="object-bottom"></mat-divider>
                     </div>
@@ -140,7 +140,7 @@
         <!-- Character Display Mode -->
             <!-- Character Image -->
             <div class="min-w-50% min-h-[720px] max-h-[720px] row-span-2 col-span-2 row-start-1 col-start-3">
-                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" src="/{{image_filepath()}}">
+                <img class="justify-self-center object-center object-fill max-w-fill max-h-fill" [src]="image_link()"/>
             </div>
             <div class="row-span-1 col-span-2 row-start-1 col-start-1 p-3">
                 <!-- Name and Subtitle -->

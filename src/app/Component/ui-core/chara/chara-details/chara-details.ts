@@ -12,6 +12,7 @@ import { DBRequestor } from '../../../../shared/services/dbrequestor';
 import { AsyncPipe } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms'
+import { server_hostname, user_img_location } from '../../../../shared/defaults/server-settings';
 
 
 @Component({
@@ -39,18 +40,41 @@ export class CharaDetailsComponent {
   chara_data_set = signal<CharaData>(chara_data_list_default[0])
   chara_log_set = computed<CharaDataEntry[] | undefined>(() => this.chara_data_set()?.entries)
 
-  image_filepath = signal<string | undefined>("default.png")
+  image_link = computed<string>(() => {
+    return this.db_service.get_chara_img_url(this.chara_data_set().img_filename)
+  })
+
+  in_edit_image_url = signal<string>(this.db_service.get_chara_img_url(undefined))
+
   uploaded_image : File | null = null
 
   //new log entry field
-  new_log_entry_field = signal<CharaDataEntry>({title: "New Entry", entry: "New Entry Body"})
+  new_log_entry_field = signal<CharaDataEntry>({title: "[New Entry]", entry: "[New Entry Body]"})
 
   private refresh_chara_details(){
       this.subscriptions?.push(this.db_service.get_chara_details(this.chara_key()).subscribe({
       next : (response) => {
         console.log("Character data received?");
         this.chara_data_set.set(response)
-        this.image_filepath.set("user_img/" + response.img_filename)
+        this.in_edit_image_url.set(this.db_service.get_chara_img_url(response.img_filename))
+        // const img_sub = this.db_service.get_chara_img(this.chara_data_set().img_filename)?.subscribe({
+        //   next: (response) => {
+        //     console.log("Got the character image file.")
+        //     const reader = new FileReader()
+        //     reader.onload = (data) => {
+        //       this.image_file.set(data.target?.result)
+        //       console.log("loaded the image file.")
+        //     }
+        //     reader.onerror = (error) => {
+        //       console.log("Error in the image FileReader")
+        //     }
+        //     reader.readAsDataURL(new Blob(response))
+        //   },
+        //   error: (error) => {
+        //     console.log("Could not get the character image file.", error)
+        //   }
+        // })
+        
       },
       error : (response) => {
         console.log("Error! character data not received")
@@ -72,7 +96,7 @@ export class CharaDetailsComponent {
           name: "[Character Name]",
           subtitle: "[Engaging Subtitle]",
           group: this.selected_group(),
-          img_filename: "static_img/default.png",
+          img_filename: undefined,
           bio: "Character Biography Here",
           relation:"[Party Relationship]",
           faction:"[Faction]",
@@ -97,11 +121,11 @@ export class CharaDetailsComponent {
 
     if(this.chara_key() == "-1"){
       //upload a new character; 
-      this.chara_data_set_observ = this.db_service.get_chara_details(this.chara_key())
-      this.subscriptions?.push(this.chara_data_set_observ.subscribe({
+      this.subscriptions?.push(this.db_service.insert_new_chara(this.chara_data_set(), this.uploaded_image).subscribe({
         next : (response) => {
           console.log("New character data sent?");
-          this.chara_data_set.set(response)
+          this.refresh_chara_details();
+          this.return.emit({mode : "chara"})
         },
         error : (response) => {
           console.log("Error! character data not sent?")
@@ -133,7 +157,16 @@ export class CharaDetailsComponent {
     this.db_service.insert_single_chara_log_entry(
       this.chara_data_set().key, 
       this.new_log_entry_field()
-    )
+    ).subscribe({
+      next: (data) => {
+        console.log("Submitted log entry.")
+        this.refresh_chara_details()
+        this.new_log_entry_field.set({title : "[New Entry]", entry : "[New Entry Body]"})
+      },
+      error: (error) => {
+        console.log("Couldn't submit log entry!")
+      }
+    })
   }
 
   update_data_signal(id : string, to_val : string){
@@ -150,7 +183,7 @@ export class CharaDetailsComponent {
     if(files != null && files.item(0) != null){
       this.uploaded_image = files.item(0)
       this.update_data_signal("img_filename", files.item(0)?.name!)
-      this.image_filepath.set(URL.createObjectURL((this.uploaded_image!))) //non-null assertion
+      this.in_edit_image_url.set(URL.createObjectURL((this.uploaded_image!))) //non-null assertion
     }
   }
 }

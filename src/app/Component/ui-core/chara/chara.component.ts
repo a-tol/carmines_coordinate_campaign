@@ -74,7 +74,7 @@ export class CharaComponent {
     const stock_chara = character_default
     stock_chara.group = this.new_group_name()
     
-    this.db_service.insert_new_chara(stock_chara).subscribe({
+    this.db_service.insert_new_chara(stock_chara, null).subscribe({
       next : (response) => {this.refresh_groups(); console.log("Character Updated?" + response)},
       error : (response) => {this.refresh_groups(); console.log("Error! character not inserted" + response)}
     })

@@ -4,6 +4,7 @@ import { CharaBrief, CharaData } from '../interfaces/chara-data';
 import { CharaDetailsComponent } from '../../Component/ui-core/chara/chara-details/chara-details';
 import { CharaDataEntry } from '../interfaces/chara-data-entries';
 import { Observable, Subscription } from 'rxjs';
+import { server_hostname, user_img_location } from '../defaults/server-settings';
 
 
 @Injectable({
@@ -19,7 +20,9 @@ export class DBRequestor {
   //  --character list
   //  --event log
 
-  private readonly API_BASE_URL = "http://127.0.0.1:8002/api"
+  
+  private readonly API_HOSTNAME = "http://127.0.0.1:8002"
+  private readonly API_BASE_URL = this.API_HOSTNAME + "/api"
   private http = inject(HttpClient)
 
   //POST to initialize the database
@@ -71,16 +74,18 @@ export class DBRequestor {
   }
 
   //POST to insert a new character
-  insert_new_chara(chara_details : CharaData) : Observable<string>{
-    return this.http.post<string>((this.API_BASE_URL + "/insert_chara"), chara_details)
+  insert_new_chara(chara_details : CharaData, img : File | null) : Observable<string>{
+    const form_data = new FormData()
+    Object.keys(chara_details).map((key) => {form_data.append(key, (chara_details as any)[key])})
+    if(img != null){
+      form_data.append("img", img)
+    }
+    return this.http.post<string>((this.API_BASE_URL + "/insert_chara"), form_data)
   }
 
   //POST to insert a single chara data log entry
-  insert_single_chara_log_entry(chara_key : string, entry: CharaDataEntry){
-    this.http.post((this.API_BASE_URL + "/insert_chara_log"), {key : chara_key, entry : entry}).subscribe({
-      next : (response) => {console.log("Character log entry inserted?")},
-      error : (response) => {console.log("Error! character log entry not removed")}
-    })
+  insert_single_chara_log_entry(chara_key : string, entry: CharaDataEntry) : Observable<string>{
+    return this.http.post<string>((this.API_BASE_URL + "/insert_chara_log"), {key : chara_key, entry : entry})
   }
 
   //POST to remove a single chara data log entry
@@ -107,6 +112,25 @@ export class DBRequestor {
     return this.http.get<CharaBrief[]>(
       (this.API_BASE_URL + "/get_chara_briefs"),
     )
+  }
+
+  // get_chara_img(filename : string | undefined) :  Observable<any> | undefined {
+  //   if(filename === undefined) return undefined;
+  //   return this.http.get(this.API_BASE_URL + "/get_chara_img", 
+  //     {
+  //       params: {
+  //         img_filename : filename
+  //       },
+  //       responseType : 'arraybuffer'
+  //     })
+  // }
+
+  get_chara_img_url(img_filename : string | undefined){
+    if(img_filename == undefined || img_filename == "undefined"){
+      return this.API_HOSTNAME + "/default.png"
+    }else{
+      return this.API_BASE_URL + "/get_chara_image?img_filename=" + img_filename
+    }
   }
 
 }

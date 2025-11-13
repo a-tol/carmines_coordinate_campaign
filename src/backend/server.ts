@@ -20,7 +20,12 @@ import { ObjectId } from "mongodb"
 import { fileURLToPath } from "url"
 import { CharaDataEntry } from "../app/shared/interfaces/chara-data-entries"
 
+
+/* Server Configuration */
 const port = 8002
+const user_img_dirpath = path.join(fileURLToPath(import.meta.url), "../../../public/user_img")
+const img_dirpath = path.join(fileURLToPath(import.meta.url), "../../../public")
+const static_img_dirpath = path.join(fileURLToPath(import.meta.url), "../../../public/static_img")
 
 /* Database Setup */
 const uri = "mongodb://localhost:27017"
@@ -34,24 +39,19 @@ const app = express()
 //express middleware (json parser, disk storage interface, multipart/form-data body reader)
 const json_parser = bodyParser.json()
 app.use(json_parser)
-const img_storage = multer.diskStorage(
+const user_img_storage = multer.diskStorage(
     {
-        destination : resolve_saved_filepath(),
+        destination : user_img_dirpath,
         filename : (req, file, cb) => {
             //make it a note only to store pngs
             cb(null, hash('sha1', file.filename + Date.now().toString()) + '.png')
         }
     },
 )
-app.use(express.static(path.join(fileURLToPath(import.meta.url), "../../../public")))
-const upload_middleware = multer({storage : img_storage})
+app.use(express.static(static_img_dirpath))
+const upload_middleware = multer({storage : user_img_storage})
 const cookie_parser = cookieParser()
 app.use(cookie_parser)
-
-function resolve_saved_filepath(){
-    console.log("path is ", path.join(fileURLToPath(import.meta.url), "../../../public/user_img"))
-    return path.join(fileURLToPath(import.meta.url), "../../../public/user_img")
-}
 
 
 /* Utility Functions */
@@ -162,7 +162,7 @@ app.get("/api/get_chara_briefs", async (req, res) => {
 })
 
 //insert a new character to the database
-app.post("/api/insert_chara", async (req, res) => {
+app.post("/api/insert_chara", upload_middleware.single('img'), async (req, res) => {
 
 
     //setup database connection
@@ -176,6 +176,7 @@ app.post("/api/insert_chara", async (req, res) => {
 
     //use the request body to insert a character details as supplied
     const chara_details : CharaData = req.body
+    chara_details.img_filename = req.file != undefined ? req.file?.filename : chara_details.img_filename
     await character_collection.insertOne(chara_details).catch((reason) =>{
         console.log("Unsuccessful Character Insertion: ", reason)
         res.sendStatus(400)
@@ -183,7 +184,7 @@ app.post("/api/insert_chara", async (req, res) => {
     });
 
     console.log("Successful Character Insertion")
-    res.send("Success!")
+    res.json({0 : "Character probably inserted"})
 
 
 })
@@ -253,7 +254,6 @@ app.get("/api/get_chara",  async (req, res) => {
     const result = await character_collection.findOne(filter, options).catch((err) =>{
         console.log("DB error in get_chara")
         res.send("Error in the DB: " + err)
-        return
     })
 
     console.log("Character Retrieval")
@@ -261,7 +261,12 @@ app.get("/api/get_chara",  async (req, res) => {
     res.send(result)
 })
 app.post("/api/remove_chara", async (req, res) => {
+    res.send("YES AAAAA")
+})
 
+app.get("/api/get_chara_image", async (req, res) => {
+    res.setHeader("Content-Type", "image/png")
+    res.sendFile(path.join(user_img_dirpath, req.query['img_filename'] as string))
 })
 
 //logout by clearing cookie
@@ -295,7 +300,7 @@ app.get("/api/get_chara_list", (req, res) => {
     res.send()
 })
 
-app.get("/api/insert_chara_log", async (req, res) => {
+app.post("/api/insert_chara_log", async (req, res) => {
     // establish database connection
     await client.connect();
     const db = client.db("campaign_db")
@@ -316,7 +321,6 @@ app.get("/api/insert_chara_log", async (req, res) => {
     await character_collection.updateOne(filter, action).catch((reason) =>{
         console.log("Unsuccessful Log Entry Update", reason)
         res.json({"1" : "Perish! the log was not updated"})
-        return;
     });
 
     res.json({"0" : "Changes probably made to log"})

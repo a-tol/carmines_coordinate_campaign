@@ -43,4 +43,4 @@ __screenshots__/
 Thumbs.db
 
 # images
-/backend/public/user_img/*
+/public/user_img/*
