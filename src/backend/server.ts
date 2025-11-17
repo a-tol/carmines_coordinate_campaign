@@ -176,6 +176,7 @@ app.post("/api/insert_chara", upload_middleware.single('img'), async (req, res) 
 
     //use the request body to insert a character details as supplied
     const chara_details : CharaData = req.body
+    chara_details.entries = []
     chara_details.img_filename = req.file != undefined ? req.file?.filename : chara_details.img_filename
     await character_collection.insertOne(chara_details).catch((reason) =>{
         console.log("Unsuccessful Character Insertion: ", reason)
@@ -203,6 +204,7 @@ app.post("/api/update_chara", upload_middleware.single('img'), async (req, res) 
 
     const character_collection = db.collection("characters")
     const chara_details : CharaData = req.body
+    chara_details.entries = JSON.parse(chara_details.entries as any) as CharaDataEntry[]    //entries retrieved as string, parsed, to arr
     const img_file : Express.Multer.File | undefined = req.file
     console.log("img file is " + img_file?.filename)
     
@@ -216,7 +218,7 @@ app.post("/api/update_chara", upload_middleware.single('img'), async (req, res) 
         faction: chara_details.faction,
         relation: chara_details.relation,
         status: chara_details.status,
-        entries: chara_details.entries,
+        entries: chara_details.entries.length === 0 ? [] : chara_details.entries,
         img_filename : img_file != undefined ? req.file?.filename : chara_details.img_filename
 
     }};
@@ -261,7 +263,28 @@ app.get("/api/get_chara",  async (req, res) => {
     res.send(result)
 })
 app.post("/api/remove_chara", async (req, res) => {
-    res.send("YES AAAAA")
+    //db connection
+    await client.connect();
+    const db = client.db("campaign_db")
+    //if the user collection db does not exist, make it
+    if(!(await db.listCollections({name : "characters"}).hasNext())){
+        await db.createCollection("characters")
+    }
+    const character_collection = db.collection("characters")
+
+    const filter = {
+        _id : new ObjectId(req.body["key"] as string)
+    }
+    await character_collection.deleteOne(filter).catch((err) =>
+    {
+        console.log("Error deleting character key ", req.query["key"], "from database")
+        res.send("Error")
+        return
+    });
+
+    res.json({0 : "Success"})
+    
+
 })
 
 app.get("/api/get_chara_image", async (req, res) => {

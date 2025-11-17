@@ -38,7 +38,6 @@ export class CharaDetailsComponent {
   chara_data_set_observ : Observable<CharaData> | undefined
   subscriptions : Subscription[] | undefined
   chara_data_set = signal<CharaData>(chara_data_list_default[0])
-  chara_log_set = computed<CharaDataEntry[] | undefined>(() => this.chara_data_set()?.entries)
 
   image_link = computed<string>(() => {
     return this.db_service.get_chara_img_url(this.chara_data_set().img_filename)
@@ -179,11 +178,25 @@ export class CharaDetailsComponent {
     console.log("Updated log signal")
   }
 
+  update_log_list_title_signal(index : number, to_val : string){
+    this.chara_data_set.update((data) => {data.entries[index].title = to_val; return data})
+  }
+
+  update_log_list_entry_signal(index : number, to_val : string){
+    this.chara_data_set.update((data) => {data.entries[index].entry= to_val; return data})
+    console.log(index)
+  }
+
   update_image(files : FileList | null){
     if(files != null && files.item(0) != null){
       this.uploaded_image = files.item(0)
       this.update_data_signal("img_filename", files.item(0)?.name!)
       this.in_edit_image_url.set(URL.createObjectURL((this.uploaded_image!))) //non-null assertion
     }
+  }
+
+  get_entry_from_signal(index : number){
+    console.log("Getting entry from", index)
+    return this.chara_data_set().entries[index]
   }
 }

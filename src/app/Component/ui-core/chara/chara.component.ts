@@ -5,6 +5,7 @@ import { CharaBrief, CharaData } from '../../../shared/interfaces/chara-data';
 import { chara_data_list_default, character_default, group_data_list_default } from '../../../shared/defaults/chara-data-defaults';
 import { MatCardModule } from '@angular/material/card'
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu'
 import { ElementRef } from '@angular/core';
 import { CharaDetailsComponent } from './chara-details/chara-details';
 import { FormGroup, FormsModule } from '@angular/forms'
@@ -15,7 +16,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chara',
   standalone: true,
-  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule, CharaDetailsComponent, FormsModule],
+  imports: [MatSidenavModule, MatDividerModule, MatCardModule, MatButtonModule, CharaDetailsComponent, FormsModule, MatMenuModule],
   templateUrl: './chara.component.html',
   styleUrl: './chara.component.css'
 })
@@ -96,6 +97,10 @@ export class CharaComponent {
     this.refresh_groups()
   }
 
+  return_to_inspect(){
+    this.in_edit_mode.set(false)
+  }
+
   change_selected_group(to_group : string){
     this.selected_group.set(to_group);
     this.inspecting_character = false;
@@ -114,6 +119,18 @@ export class CharaComponent {
 
   set_group_name(value : any){
     this.new_group_name.set(value);
+  }
+
+  prompt_delete(key : string){
+    this.db_service.remove_chara(key).subscribe({
+      next : (response) => {
+        console.log("Deleted character, refreshing.")
+        this.refresh_groups()
+      },
+      error: (response) => {
+        console.log("Character delete failed?")
+      }
+    })
   }
 
 }

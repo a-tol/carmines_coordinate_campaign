@@ -34,11 +34,8 @@ export class DBRequestor {
   }
 
   //POST to remove a character from the database
-  remove_chara(chara_key : string){
-    this.http.post((this.API_BASE_URL + "/remove_chara"), chara_key).subscribe({
-      next : (response) => {console.log("Character Removed?")},
-      error : (response) => {console.log("Error! character not removed")}
-    })
+  remove_chara(chara_key : string) : Observable<string>{
+    return this.http.post<string>((this.API_BASE_URL + "/remove_chara"), {"key" : chara_key})
   }
 
   //GET to receive character details
@@ -66,7 +63,7 @@ export class DBRequestor {
   //POST to update character details using CharaData object
   update_chara_details(chara_details : CharaData, img : File | null) : Observable<string> {
     const form_data = new FormData()
-    Object.keys(chara_details).map((key) => {form_data.append(key, (chara_details as any)[key])})
+    Object.keys(chara_details).map((key) => {key != 'entries' ? form_data.append(key, (chara_details as any)[key]) : form_data.append(key, JSON.stringify((chara_details as any)[key]))})
     if(img != null){
       form_data.append("img", img)
     }
@@ -76,7 +73,7 @@ export class DBRequestor {
   //POST to insert a new character
   insert_new_chara(chara_details : CharaData, img : File | null) : Observable<string>{
     const form_data = new FormData()
-    Object.keys(chara_details).map((key) => {form_data.append(key, (chara_details as any)[key])})
+    Object.keys(chara_details).map((key) => {key != 'entries' ? form_data.append(key, (chara_details as any)[key]) : form_data.append(key, JSON.stringify((chara_details as any)[key]))})
     if(img != null){
       form_data.append("img", img)
     }

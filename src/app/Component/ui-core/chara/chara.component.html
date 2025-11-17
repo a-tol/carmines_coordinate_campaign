@@ -76,10 +76,14 @@
                                     <mat-card-title>{{chara.name}}</mat-card-title>
                                     <mat-card-subtitle>{{chara.subtitle}}</mat-card-subtitle>
                                 </mat-card-title-group>
-                                <button type="" class="col-span-1 col-start-5 size-auto" (click)="open_details(chara.key)" mat-button>+</button>
+                                <button type="" class="col-span-1 col-start-5 size-auto" [matMenuTriggerFor]="menu" mat-button>*</button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click) = "open_details(chara.key)">View</button>
+                                    <button mat-menu-item (click) = "prompt_delete(chara.key)">Delete</button>
+                                </mat-menu>
                             </div>
                         </mat-card-header>
-                        <img class="mx-auto" mat-card-md-image src="/Clueless.webp"/>
+                        <img class="mx-auto" mat-card-lg-image src="{{this.db_service.get_chara_img_url(chara.img_filename)}}"/>
                         <mat-card-content>
                         </mat-card-content>
                     </mat-card>

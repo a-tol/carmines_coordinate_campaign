@@ -95,14 +95,23 @@
                 </div>
             </div>
             <!-- Character Log Entries  -->
-            @for(entry of chara_log_set(); track entry.title){
+            @for(entry of chara_data_set().entries; track entry.title; let index = $index){
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
                     <div class="grid grid-rows-1 grid-cols-1">
                         <textarea
-                            name = "bio"
+                            name = "title"
                             [id] = "entry.title"
-                            class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">{{entry.title}}</textarea>
-                        <textarea class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">{{entry.entry}}</textarea>
+                            [ngModel] = "get_entry_from_signal(index).title"
+                            (ngModelChange) = "update_log_list_title_signal(index, $event)"
+                            class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">
+                        </textarea>
+                        <textarea 
+                            name = "entry"
+                            [id] = "entry.entry"
+                            [ngModel] = "get_entry_from_signal(index).entry"
+                            (ngModelChange) = "update_log_list_entry_signal(index, $event)"
+                            class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">
+                        </textarea>
                         <mat-divider class="object-bottom"></mat-divider>
                     </div>
                 </div>
@@ -162,7 +171,7 @@
                 <h1 class="justify-left text-4xl font-semibold pt-2">Biography</h1>
                 <h1 class="justify-left text-xl pt-2 wrap-anywhere">{{chara_data_set()?.bio}}</h1>
             </div>
-            @for(entry of chara_log_set(); track entry.title){
+            @for(entry of chara_data_set().entries; track entry.title){
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12">
                     <mat-divider class="object-bottom"></mat-divider>
                     <h1 class="justify-left text-4xl font-semibold pt-2">{{entry.title}}</h1>
