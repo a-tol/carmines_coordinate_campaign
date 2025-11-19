@@ -99,16 +99,16 @@
                 <div class="row-span-1 col-span-2 row-start-auto col-start-1 pb-12 pt-4">
                     <div class="grid grid-rows-1 grid-cols-1">
                         <textarea
-                            name = "title"
+                            name = "{{entry.title}}"
                             [id] = "entry.title"
-                            [ngModel] = "get_entry_from_signal(index).title"
+                            [ngModel] = "entry.title"
                             (ngModelChange) = "update_log_list_title_signal(index, $event)"
                             class="bg-gray-300 field-sizing-content box-border resize-none object-fill display-block justify-left text-4xl font-semibold pt-4">
                         </textarea>
                         <textarea 
-                            name = "entry"
+                            name = "{{entry.entry}}"
                             [id] = "entry.entry"
-                            [ngModel] = "get_entry_from_signal(index).entry"
+                            [ngModel] = "entry.entry"
                             (ngModelChange) = "update_log_list_entry_signal(index, $event)"
                             class="bg-gray-300 size-full box-border object-fill display-block justify-left text-xl pt-2">
                         </textarea>

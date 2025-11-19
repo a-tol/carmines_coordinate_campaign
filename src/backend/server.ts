@@ -3,7 +3,7 @@ const dname = import.meta.dirname
 const fname = import.meta.filename
 
 import express from "express"
-import { MongoClient} from "mongodb"
+import { Collection, MongoClient} from "mongodb"
 import bodyParser from "body-parser"
 import multer, { diskStorage } from 'multer'
 import cookieParser from "cookie-parser"
@@ -19,6 +19,7 @@ import { error } from "console"
 import { ObjectId } from "mongodb"
 import { fileURLToPath } from "url"
 import { CharaDataEntry } from "../app/shared/interfaces/chara-data-entries"
+import { rm } from "fs"
 
 
 /* Server Configuration */
@@ -102,6 +103,31 @@ async function get_username_from_cookie(cookie : String){
     }
 }
 */
+
+async function delete_chara_image_from_fs(c : Collection, chara_key : string) : Promise<void>{
+
+    console.log("Firing the delete function with key", chara_key)
+
+    const filter = {
+        _id : new ObjectId(chara_key)
+    }
+
+    const options = {
+        projection: {img_filename : 1}
+    }
+
+    const filename_object = await c.findOne(filter, options).catch((err) => {
+        console.log("Error deleting the image associated with the key ", chara_key)
+    })
+
+    console.log("filename_object is ", filename_object)
+
+    if(filename_object){
+        console.log("Attempting to delete", path.join(user_img_dirpath, filename_object['img_filename']))
+        fs.rm(path.join(user_img_dirpath, filename_object['img_filename']), () => {console.log("Removed image file w/ chara", filename_object['img_filename'])})
+    }
+
+}
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -207,6 +233,11 @@ app.post("/api/update_chara", upload_middleware.single('img'), async (req, res) 
     chara_details.entries = JSON.parse(chara_details.entries as any) as CharaDataEntry[]    //entries retrieved as string, parsed, to arr
     const img_file : Express.Multer.File | undefined = req.file
     console.log("img file is " + img_file?.filename)
+
+    //need to delete old image if there is a new one attached
+    if(req.file != undefined){
+        await delete_chara_image_from_fs(character_collection, chara_details.key)
+    }
     
     const filter = {_id : new ObjectId(chara_details.key)}
     const action = {$set : {
@@ -275,9 +306,12 @@ app.post("/api/remove_chara", async (req, res) => {
     const filter = {
         _id : new ObjectId(req.body["key"] as string)
     }
+
+    await delete_chara_image_from_fs(character_collection, req.body["key"] as string).catch((err) => {console.log("Failed to delete image for ", req.body["key"])})
+
     await character_collection.deleteOne(filter).catch((err) =>
     {
-        console.log("Error deleting character key ", req.query["key"], "from database")
+        console.log("Error deleting character key ", req.body["key"], "from database")
         res.send("Error")
         return
     });
