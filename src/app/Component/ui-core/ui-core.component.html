@@ -1,6 +1,10 @@
 
 @if (set_mode()) {
     @switch(set_mode().mode){
+        @case("login"){
+            <app-login
+             (campaign_key) = "upstream_key_eval($event)"/>
+        }
         @case("home"){
             <app-home/>
         }

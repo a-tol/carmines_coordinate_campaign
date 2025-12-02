@@ -160,7 +160,8 @@
   <span>Campaign Name HERE</span>
 </mat-toolbar>
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="over">       
+  <mat-sidenav #sidenav mode="over">
+    @if(this.campaign_key() != null ){
     <button class="sidenav-button" mat-button (click)="swap_mode(0)">Home</button>
     <mat-divider/>
     <button class="sidenav-button" mat-button (click)="swap_mode(1)">Characters</button>
@@ -171,12 +172,16 @@
     <mat-divider/>
     <button class="sidenav-button" mat-button (click)="swap_mode(4)">Map</button>
     <mat-divider/>
+    }
     <button class="sidenav-button" mat-button>Change Campaign</button>
     <mat-divider/>
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="min-h-screen">
-      <app-ui-core class="min-h-screen" [set_mode] = "mode()">
+      <app-ui-core 
+        class="min-h-screen" 
+        [set_mode] = "mode()"
+        (upstream_key_eval_call)="eval_campaign_key($event)">
       </app-ui-core>
     </div>
   </mat-sidenav-content>

@@ -5,6 +5,7 @@ import { CharaDetailsComponent } from '../../Component/ui-core/chara/chara-detai
 import { CharaDataEntry } from '../interfaces/chara-data-entries';
 import { Observable, Subscription } from 'rxjs';
 import { server_hostname, user_img_location } from '../defaults/server-settings';
+import { CreateCampaignParams } from '../interfaces/create-campaign-params';
 
 
 @Injectable({
@@ -128,6 +129,19 @@ export class DBRequestor {
     }else{
       return this.API_BASE_URL + "/get_chara_image?img_filename=" + img_filename
     }
+  }
+
+  create_new_campaign(params : CreateCampaignParams) : Observable<string>{
+    return this.http.post<string>((this.API_BASE_URL + "/create_new_campaign"), params, {withCredentials : true})
+  }
+
+  eval_campaign_key(key : string) : Observable<boolean>{
+    return this.http.get<boolean>((this.API_BASE_URL + "/login_campaign"), 
+    {
+      params : {
+        "campaign_key" : key
+      }
+    })
   }
 
 }

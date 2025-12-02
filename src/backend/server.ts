@@ -20,6 +20,7 @@ import { ObjectId } from "mongodb"
 import { fileURLToPath } from "url"
 import { CharaDataEntry } from "../app/shared/interfaces/chara-data-entries"
 import { rm } from "fs"
+import { CreateCampaignParams } from "../app/shared/interfaces/create-campaign-params"
 
 
 /* Server Configuration */
@@ -53,6 +54,9 @@ app.use(express.static(static_img_dirpath))
 const upload_middleware = multer({storage : user_img_storage})
 const cookie_parser = cookieParser()
 app.use(cookie_parser)
+
+//this might backfire sometime later
+// app.use(cors)
 
 
 /* Utility Functions */
@@ -132,19 +136,110 @@ async function delete_chara_image_from_fs(c : Collection, chara_key : string) : 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, campaign_key');
+    res.header('Access-Control-Allow-Credentials', 'true')
     next()
 })
 
 
 /* Server Routes */
 
-app.options('/api', (req, res) => {
+app.options('/api/', (req, res) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, campaign_key');
+    res.header('Access-Control-Allow-Credentials', 'true')
     res.sendStatus(200);
 });
+
+
+//inserts a new campaign with details into the campaign collection
+app.post("/api/create_new_campaign", async (req, res) => {
+    //establish database connection
+    await client.connect()
+    const db = client.db("campaign_db")
+    const campaigns = db.collection("campaigns")
+    const response = {msg : "success"}
+    
+    //set a user cookie to remember future accesses (big nonce hashed with date)
+    const gm_key = hash("sha256", (Math.random()*2^63).toString() + Date.now().toString())
+    //randomness is seeded on time. sleep for 0.2 seconds
+    await new Promise(r => setTimeout(r, 200))
+    const player_key = hash("sha256", (Math.random()*2^63).toString() + Date.now().toString())
+    const campaign_params : CreateCampaignParams = req.body
+
+    console.log("Inserting campaign")
+    await campaigns.insertOne(
+        {...campaign_params, gm_key : gm_key, player_key : player_key}
+    ).catch(
+        (error) =>   {
+            console.log("Error inserting the new campaign record", error);
+            response.msg = "failure"
+        }
+    ).then(async () => {
+        await client.close()
+    })
+
+    //model sessions as username to list of active cookies;
+    //if a username exists, update the list. otherwise insert a new one
+    // if(await active_sessions_collection.findOne({username: username}) != null){
+    //     const filter = {username: username}
+    //     const action = {$addToSet : {cookies : cookie}}
+    //     const cookie_result = await active_sessions_collection.updateOne(filter, action)
+    //     console.log("Updated sessions for", username, "with cookie", cookie, "DB output:", cookie_result)
+    // }else{
+    //     const cookie_result = await active_sessions_collection.insertOne({username : username, cookies : [cookie]})
+    //     console.log("Updated sessions for", username, "with cookie", cookie, "DB output:", cookie_result)
+    // }
+    res.json(gm_key)
+
+})
+
+app.get("/api/login_campaign", async (req, res) => {
+        //establish database connection
+    await client.connect()
+    const db = client.db("campaign_db")
+    const campaigns = db.collection("campaigns")
+    let found = true;
+
+    console.log(req.query['campaign_key'])
+
+    const filter = {
+        $or: 
+            [
+                {gm_key : req.query["campaign_key"]},
+                {player_key: req.query["campaign_key"]}
+            ]
+    }
+
+    const options = {
+        projection: {_id: 0, gm_key : 1, player_key : 1}
+    }
+
+    const campaign_set = await campaigns.findOne(filter, options).catch(
+        (error) =>   {
+            console.log("Error finding the campaign record", error);
+            found = false;
+        }
+    )
+
+    console.log(found, campaign_set, typeof campaign_set)
+
+    //a match found implies that either the gm_key or player_key matched
+    if(found && campaign_set !== null && typeof campaign_set === 'object'){
+        if(campaign_set['gm_key'] === req.query["campaign_key"]){
+            res.send(true)
+        }else{
+            res.send(false)
+        }
+    }else{
+        res.sendStatus(404)
+    }
+
+    client.close()
+
+})
+
 
 //todo: make this host the built angular chunks
 app.get("/", (req, res) => {
@@ -326,24 +421,24 @@ app.get("/api/get_chara_image", async (req, res) => {
     res.sendFile(path.join(user_img_dirpath, req.query['img_filename'] as string))
 })
 
-//logout by clearing cookie
-app.get("/api/clear_cookie", async (req, res) =>{
-    //establish database connection
-    await client.connect()
-    const db = client.db("bookstore_db")
-    const active_sessions = db.collection("active_sessions")
+// //logout by clearing cookie
+// app.get("/api/clear_cookie", async (req, res) =>{
+//     //establish database connection
+//     await client.connect()
+//     const db = client.db("bookstore_db")
+//     const active_sessions = db.collection("active_sessions")
 
-    //in the cookie registry, match a user with the cookie then remove it from the list
-    const filter = {cookies: {$elemMatch: req.cookies["user-session"]}}
-    const action = {$pull : {cookies : req.cookies["user-session"]}}
-    const logout_result = active_sessions.updateOne(filter, action)
-    console.log("Removing cookie with result", logout_result)
+//     //in the cookie registry, match a user with the cookie then remove it from the list
+//     const filter = {cookies: {$elemMatch: req.cookies["user-session"]}}
+//     const action = {$pull : {cookies : req.cookies["user-session"]}}
+//     const logout_result = active_sessions.updateOne(filter, action)
+//     console.log("Removing cookie with result", logout_result)
 
-    client.close()
+//     client.close()
 
-    res.clearCookie("user-session")
-    res.redirect("/static/logout.html")
-})
+//     res.clearCookie("user-session")
+//     res.redirect("/static/logout.html")
+// })
 
 //endpoint to handle a new entry in the item database
 app.post("/api/remove_chara_log", async (req, res) => {

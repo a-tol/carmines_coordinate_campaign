@@ -33,6 +33,7 @@ export class CharaDetailsComponent {
   chara_data_entries = signal(chara_data_entries_defaults);
   chara_submit_config = chara_submit_config
   log_submit_config = log_submit_config
+  is_loading = signal<boolean>(false)
 
   //initial database query for character details
   chara_data_set_observ : Observable<CharaData> | undefined
@@ -51,11 +52,13 @@ export class CharaDetailsComponent {
   new_log_entry_field = signal<CharaDataEntry>({title: "[New Entry]", entry: "[New Entry Body]"})
 
   private refresh_chara_details(){
+    this.is_loading.set(true)
       this.subscriptions?.push(this.db_service.get_chara_details(this.chara_key()).subscribe({
       next : (response) => {
         console.log("Character data received?");
         this.chara_data_set.set(response)
         this.in_edit_image_url.set(this.db_service.get_chara_img_url(response.img_filename))
+        this.is_loading.set(false)
         // const img_sub = this.db_service.get_chara_img(this.chara_data_set().img_filename)?.subscribe({
         //   next: (response) => {
         //     console.log("Got the character image file.")
@@ -89,6 +92,12 @@ export class CharaDetailsComponent {
 
     }else{
       //default character ocnfiguration
+      this.init_edit_mode()
+    }
+  }
+
+  init_edit_mode(){
+      this.is_loading.set(false)
       this.chara_data_set.set(
         {
           key: "-1",
@@ -104,7 +113,6 @@ export class CharaDetailsComponent {
         }
       )
     }
-  }
 
   ngOnDestroy(){
     this.subscriptions?.map((s) => s.unsubscribe())

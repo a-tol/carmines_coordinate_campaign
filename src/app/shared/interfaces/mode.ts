@@ -1,3 +1,3 @@
 export interface Mode {
-    mode : "home" | "chara" | "item" | "log" | "map" | "misc"
+    mode : "home" | "chara" | "item" | "log" | "map" | "misc" | "login"
 }
